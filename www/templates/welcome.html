@@ -1,10 +1,18 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>WELCOME</title>
-</head>
-<body>
-<h1>WELCOME</h1>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Welcome!{% endblock %}
+
+{% block content %}
+<section class="container">
+    <h1>Welcome to Flopp's Unicode Explorer!</h1>
+</section>
+
+<section class="container">
+    <h2>Unicode Blocks</h2>
+    <ul>
+        {% for block in blocks %}
+        <li><a href="block/{{ block.block }}">{{ block.name }}</a></li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

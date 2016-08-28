@@ -10,3 +10,5 @@ except ImportError:
     pass
 
 import www.unicodeapp
+import www.error
+

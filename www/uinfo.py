@@ -3,6 +3,11 @@ import unicodedata
 import re
 
 
+def init():
+    _load_blocks()
+    _load_nameslist()
+
+
 def get_name(codepoint):
     if codepoint < 0 or codepoint > 0x10FFFF:
         return None
@@ -204,4 +209,11 @@ def get_block(name):
         the_block["next"] = next_block
         return the_block
     return None
-    
+
+
+def get_blocks():
+    _load_blocks()
+    blocks = []
+    for (block, block_name, range_from, range_to) in _blocks:
+        blocks.append({"block": block, "name": block_name})
+    return blocks
