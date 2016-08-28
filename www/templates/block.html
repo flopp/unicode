@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Block: {{ block.name }}{% endblock %}
+
+{% block navigation %}
+<section class="container clearfix">
+{% if block.prev != None %}
+<a class="button button-clear float-left" href="{{ block.prev.block }}">{{ block.prev.name }}</a>
+{% endif %}
+{% if block.next != None %}
+<a class="button button-clear float-right" href="{{ block.next.block }}">{{ block.next.name }}</a>
+{% endif %}
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="container">
+<h1>Block: {{ block.name }}</h1>
+
+<table>
+    <tr><th class="th">Range</th><td>{{ "U+{:04X}".format(block.range_from) }} - {{ "U+{:04X}".format(block.range_to) }}</td></tr>
+    <tr><th class="th">Official Chart</th><td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(block.range_from) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(block.range_from) }}.pdf</a></td></tr>
+</table>
+
+<h2>Characters</h2>
+<div>
+{% for item in chars %}
+    <a class="button button-outline btn-char" href="../code/{{ "{:04X}".format(item.code) }}" title="{{ "U+{:04X}: {}".format(item.code, item.name) }}">
+        {{ item.char }}
+    </a>
+{% endfor %}
+</div>
+</section>
+{% endblock %}

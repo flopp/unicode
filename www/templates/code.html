@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{{ "U+{:04X}: {}".format(code, name) }}{% endblock %}
+
+{% block navigation %}
+<section class="container clearfix">
+{% if prev_code != None %}
+<a class="button button-clear float-left" href="{{ "{:04X}".format(prev_code) }}">{{ "U+{:04X}".format(prev_code) }}</a>
+{% endif %}
+{% if next_code != None %}
+<a class="button button-clear float-right" href="{{ "{:04X}".format(next_code) }}">{{ "U+{:04X}".format(next_code) }}</a>
+{% endif %}
+</section>
+{% endblock %}
+   
+    
+{% block content %}
+<section class="container">
+<div class="char-big">{{ char }}</div>
+<h1>{{ name }}</h1>
+
+<table class>
+<tr><th class="th">Code</th><td>{{ "U+{:04X}".format(code) }}</td></tr>
+<tr><th class="th">Name</th><td>{{ name }}</td></tr>
+<tr><th class="th">Block</th><td><a href="../block/{{ block.block }}">{{ block.name }}</a></td></tr>
+<tr><th class="th">Sub-Block</th><td>{{ subblock.name }}</td></tr>
+{% if alternate|length > 0 %}
+<tr><th class="th">Alternate Name(s)</th><td>
+{% for item in alternate %}{{ item }}<br />{% endfor %}
+</td></tr>
+{% endif %}
+{% if comments|length > 0 %}
+<tr><th class="th">Comments</th><td>
+{% for item in comments %}{{ item }}<br />{% endfor %}
+</td></tr>
+{% endif %}
+</table>
+
+{% if related|length > 0 %}
+<h2>Related</h2>
+<div>
+{% for item in related %}
+    <a class="button button-outline btn-char" href="../code/{{ "{:04X}".format(item.code) }}" title="{{ "U+{:04X}: {}".format(item.code, item.name) }}">
+        {{ item.char }}
+    </a>
+{% endfor %}
+</div>
+{% endif %}
+</section>
+{% endblock %}
