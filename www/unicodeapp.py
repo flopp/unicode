@@ -4,9 +4,6 @@ from flask import render_template
 import re
 import unicodedata
 
-@app.route('/')
-def welcome():
-    return render_template("welcome.html")
 
 def to_utf8(i):
     try:
@@ -14,6 +11,17 @@ def to_utf8(i):
         return chr(i)
     except UnicodeEncodeError as e:
         return ''
+
+
+@app.before_first_request
+def init():
+    uinfo.init()
+
+
+@app.route('/')
+def welcome():
+    return render_template("welcome.html", blocks=uinfo.get_blocks())
+
 
 @app.route('/code/<codepoint>')
 def show_codepoint(codepoint):
@@ -64,5 +72,3 @@ def show_block(blockname):
             ))
         return render_template("block.html", block=block, chars=chars)
     return render_template("404.html")
-    
-    

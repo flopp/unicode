@@ -5,10 +5,10 @@
 {% block navigation %}
 <section class="container clearfix">
 {% if prev_code != None %}
-<a class="button button-clear float-left" href="{{ "{:04X}".format(prev_code) }}">{{ "U+{:04X}".format(prev_code) }}</a>
+<a class="button button-clear float-left" href="{{ "{:04X}".format(prev_code) }}">◁ {{ "U+{:04X}".format(prev_code) }}</a>
 {% endif %}
 {% if next_code != None %}
-<a class="button button-clear float-right" href="{{ "{:04X}".format(next_code) }}">{{ "U+{:04X}".format(next_code) }}</a>
+<a class="button button-clear float-right" href="{{ "{:04X}".format(next_code) }}">{{ "U+{:04X}".format(next_code) }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}

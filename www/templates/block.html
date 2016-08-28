@@ -5,10 +5,10 @@
 {% block navigation %}
 <section class="container clearfix">
 {% if block.prev != None %}
-<a class="button button-clear float-left" href="{{ block.prev.block }}">{{ block.prev.name }}</a>
+<a class="button button-clear float-left" href="{{ block.prev.block }}">◁ {{ block.prev.name }}</a>
 {% endif %}
 {% if block.next != None %}
-<a class="button button-clear float-right" href="{{ block.next.block }}">{{ block.next.name }}</a>
+<a class="button button-clear float-right" href="{{ block.next.block }}">{{ block.next.name }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}
