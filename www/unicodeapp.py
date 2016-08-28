@@ -20,7 +20,15 @@ def init():
 
 @app.route('/')
 def welcome():
-    return render_template("welcome.html", blocks=uinfo.get_blocks())
+    chars = []
+    for i in range(0, 300, 1):
+        c = 33 + i * 23
+        chars.append(dict(
+            code=c,
+            char=to_utf8(c),
+            name=uinfo.get_name(c)
+        ))
+    return render_template("welcome.html", chars=chars, blocks=uinfo.get_blocks())
 
 
 @app.route('/code/<codepoint>')

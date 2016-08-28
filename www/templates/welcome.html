@@ -8,11 +8,23 @@
 </section>
 
 <section class="container">
-    <h2>Unicode Blocks</h2>
-    <ul>
-        {% for block in blocks %}
-        <li><a href="block/{{ block.block }}">{{ block.name }}</a></li>
-        {% endfor %}
-    </ul>
+    <div class="row">
+        <div class="column">
+            <h2>Explore Characters</h2>
+            <div>
+                {% for item in chars %}
+                <a class="button button-outline btn-char" href="../code/{{ "{:04X}".format(item.code) }}" title="{{ "U+{:04X}: {}".format(item.code, item.name) }}">{{ item.char }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="column">
+            <h2>Explore Blocks</h2>
+            <ul>
+                {% for block in blocks %}
+                <li><a href="block/{{ block.block }}">{{ block.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </section>
 {% endblock %}
