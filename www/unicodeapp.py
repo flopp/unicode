@@ -47,6 +47,14 @@ def show_codepoint(codepoint):
             name=uinfo.get_name(r)
         ))
     
+    confusables = []
+    for r in uinfo.get_confusables(codepoint):
+        confusables.append(dict(
+            code=r,
+            char=to_utf8(r),
+            name=uinfo.get_name(r)
+        ))
+    
     prev_code = None
     if codepoint > 0:
         prev_code = codepoint - 1
@@ -62,6 +70,7 @@ def show_codepoint(codepoint):
         alternate=info['alternate'],
         comments=info['comments'],
         related=related,
+        confusables=confusables,
         prev_code=prev_code,
         next_code=next_code)
     

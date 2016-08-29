@@ -6,6 +6,7 @@ import re
 def init():
     _load_blocks()
     _load_nameslist()
+    _load_confusables()
 
 
 def get_name(codepoint):
@@ -121,10 +122,10 @@ def _load_nameslist():
                     m = line.split(' - ')
                     if len(m) == 2:
                         m = m[1].strip()
-                        m = re.match('^([0-9A-F]{4,5})\)$', m)
+                        m = re.match('^([0-9A-F]{4,6})\)$', m)
                         if m:
                             related.append(int(m.group(1), 16))
-                    elif re.match('^[0-9A-F]{4,5}$', line):
+                    elif re.match('^[0-9A-F]{4,6}$', line):
                         related.append(int(line, 16))
                     else:
                         app.logger.info('strange related: {}'.format(line))
@@ -186,6 +187,42 @@ def _update_related():
             new = sorted(list(set(new)))
             _extended[r] = (e_code, e_name, e_alternate, e_comments, new)
 
+_confusables = {}
+def _load_confusables():
+    if len(_confusables) != 0:
+        return
+    fname = app.root_path + '/data/confusables.txt'
+    app.logger.info("loading: {}".format(fname))
+    with open(fname, 'r', encoding='utf-8') as f:
+        sets = {}
+        for line in f:
+            line = line.strip()
+            if line.startswith('#') or line == '':
+                continue
+            m = re.match('^\s*([0-9A-Fa-f]{4,6})\s*;\s*([0-9A-Fa-f]{4,6})\s*;\s*MA', line)
+            if m:
+                i1 = int(m.group(1), 16)
+                i2 = int(m.group(2), 16)
+                if (i1 > i2):
+                    i1, i2 = i2, i1
+                if i1 not in sets:
+                    sets[i1] = []
+                    sets[i1].append(i1)
+                sets[i1].append(i2)
+        for key, value in sets.items():
+            _confusables[key] = value
+            for v in value:
+                values2 = []
+                values2.append(key)
+                for vv in value:
+                    if vv != v:
+                        values2.append(vv)
+                _confusables[v] = values2
+
+def get_confusables(codepoint):
+    if codepoint in _confusables:
+        return _confusables[codepoint]
+    return []
 
 def get_block(name):
     _load_blocks()

@@ -46,5 +46,18 @@
 {% endfor %}
 </div>
 {% endif %}
+
+{% if confusables|length > 0 %}
+<h2>Confusables</h2>
+<div>
+{% for item in confusables %}
+    <a class="button button-outline btn-char" href="../code/{{ "{:04X}".format(item.code) }}" title="{{ "U+{:04X}: {}".format(item.code, item.name) }}">
+        {{ item.char }}
+    </a>
+{% endfor %}
+</div>
+{% endif %}
+
+
 </section>
 {% endblock %}
