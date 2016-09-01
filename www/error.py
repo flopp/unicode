@@ -11,7 +11,7 @@ def internal_server_error(error):
     app.logger.error('Server Error: %s', (error))
     return render_template('500.html'), 500
 
-@app.errorhandler(Exception)
+#@app.errorhandler(Exception)
 def unhandled_exception(error):
     app.logger.error('Unhandled Exception: %s', (error))
     return render_template('500.html'), 500

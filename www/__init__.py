@@ -2,6 +2,7 @@ from flask import Flask
 
 app = Flask(__name__)
 app.config.from_object('config')
+app.xxx = "yyy"
 
 try:
     from flask_compress import Compress
@@ -11,4 +12,7 @@ except ImportError:
 
 import www.unicodeapp
 import www.error
+import www.uinfo
+
+app.uinfo = uinfo.UInfo()
 

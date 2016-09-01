@@ -1,31 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Block: {{ block.name }}{% endblock %}
+{% block title %}Block: {{ data.name }}{% endblock %}
 
 {% block navigation %}
 <section class="container clearfix">
-{% if block.prev != None %}
-<a class="button button-clear float-left" href="{{ block.prev.block }}">◁ {{ block.prev.name }}</a>
+{% if data.prev != None %}
+<a class="button button-clear float-left" href="{{ "../b/{:04X}".format(data.prev.id) }}">◁ {{ "{:04X}: {}".format(data.prev.id, data.prev.name) }}</a>
 {% endif %}
-{% if block.next != None %}
-<a class="button button-clear float-right" href="{{ block.next.block }}">{{ block.next.name }} ▷</a>
+{% if data.next != None %}
+<a class="button button-clear float-right" href="{{ "../b/{:04X}".format(data.next.id) }}">{{ "{:04X}: {}".format(data.next.id, data.next.name) }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}
 
 {% block content %}
 <section class="container">
-<h1>Block: {{ block.name }}</h1>
+<h1>Block: {{ data.name }}</h1>
 
 <table>
-    <tr><th class="th">Range</th><td>{{ "U+{:04X}".format(block.range_from) }} - {{ "U+{:04X}".format(block.range_to) }}</td></tr>
-    <tr><th class="th">Official Chart</th><td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(block.range_from) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(block.range_from) }}.pdf</a></td></tr>
+    <tr><th class="th">Range</th><td><a href="../c/{{ "{:04X}".format(data.range_from) }}">{{ "U+{:04X}".format(data.range_from) }}</a> - <a href="../c/{{ "{:04X}".format(data.range_to) }}">{{ "U+{:04X}".format(data.range_to) }}</a></td></tr>
+    <tr><th class="th">Official Chart</th><td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf</a></td></tr>
 </table>
 
 <h2>Characters</h2>
 <div>
-{% for item in chars %}
-    <a class="button button-outline btn-char" href="../code/{{ "{:04X}".format(item.code) }}" title="{{ "U+{:04X}: {}".format(item.code, item.name) }}">
+{% for item in data.chars %}
+    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
         {{ item.char }}
     </a>
 {% endfor %}

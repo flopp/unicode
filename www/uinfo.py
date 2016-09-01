@@ -2,255 +2,285 @@ from www import app
 import unicodedata
 import re
 
+def sanitize_name(s):
+    non_alphanum = re.compile('([^a-z0-9])')
+    return non_alphanum.sub(r'\\\1', s.strip().lower())
 
-def init():
-    _load_blocks()
-    _load_nameslist()
-    _load_confusables()
-
-
-def get_name(codepoint):
-    if codepoint < 0 or codepoint > 0x10FFFF:
-        return None
-    _load_nameslist()
-    extended = _get_extended(codepoint)
-    if extended:
-        (e_code, e_name, e_alternate, e_comments, e_related) = extended
-        return e_name
-    else:
-        try:
-            return unicodedata.name(chr(codepoint))
-        except ValueError as e:
-            return None
-    return None
-
-def get_info(codepoint):
-    if codepoint < 0 or codepoint > 0x10FFFF:
-        return None
-    
-    _load_blocks()
-    _load_nameslist()
-    
-    res = {}
-    res['name'] = None
-    res['block'] = _get_block(codepoint)
-    res['subblock'] = _get_subblock(codepoint)
-    res['alternate'] = []
-    res['comments'] = []
-    res['related'] = []
-    
-    extended = _get_extended(codepoint)
-    if extended:
-        (e_code, e_name, e_alternate, e_comments, e_related) = extended
-        res['name'] = e_name
-        res['alternate'] = e_alternate
-        res['comments'] = e_comments
-        res['related'] = e_related
-    else:
-        try:
-            res['name'] = unicodedata.name(chr(codepoint))
-        except ValueError as e:
-            res['name'] = None
-    
-    return res    
-
-_blocks = []
-def _load_blocks():
-    if len(_blocks) != 0:
-        return
-    fname = app.root_path + '/data/Blocks.txt'
-    app.logger.info("loading: {}".format(fname))
-    with open(fname, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.strip()
-            if line.startswith('#') or line == '':
-                continue
-            m = re.split('\.\.|;\s+', line)
-            if len(m) != 3:
-                continue
-            b = (m[2].lower().replace(' ', '-'), m[2], int(m[0], 16), int(m[1], 16))
-            _blocks.append(b)
-
-def _get_block(codepoint):
-    _load_blocks()
-    _load_nameslist()
-    for (block, name, range_from, range_to) in _blocks:
-        if range_from <= codepoint and codepoint <= range_to:
-            return {"block": block, "name": name, "from": range_from, "to": range_to}
-    return {}
-
-_extended = {}
-_subblocks = []
-def _load_nameslist():
-    if len(_extended) > 0:
-        return
-    _load_blocks()
-    for (_, _, range_from, range_to) in _blocks:
-        for code in range(range_from, range_to + 1):
-            _extended[code] = (code, '<unassigned>', [], [], [])
-    fname = app.root_path + '/data/NamesList.txt'
-    app.logger.info("loading: {}".format(fname))
-    
-    loaded_chars = 0
+def to_utf8(i):
     try:
-        with open(fname, 'r', encoding='utf-8') as f:
-            code = -1
-            name = None
-            alternate = []
-            related = []
-            comments = []
-            subblock_from = None
-            subblock_name = None
-            subblock_comments = []
+        c = chr(i).encode('utf8')
+        return chr(i)
+    except UnicodeEncodeError as e:
+        return ''
+
+class UInfo:
+    def __init__(self):
+        self._blocks = None
+        self._chars = None
+        self._subblocks = None
+    
+    def get_char(self, code):
+        if code > len(self._chars):
+            return None
+        return self._chars[code]        
+    
+    def get_block(self, bid):
+        if bid not in self._blocks:
+            return None
+        return self._blocks[bid]
+    
+    def get_char_info(self, code):
+        if code is None or code >= len(self._chars) or self._chars[code] is None:
+            return None
+        return {
+            "id": code,
+            "char": to_utf8(code),
+            "name": self._chars[code]["name"]
+        }
+    
+    def get_random_char_infos(self, count):
+        chars = []
+        for code in range(count):
+            c = self.get_char_info(code)
+            if c is not None:
+                chars.append(c)
+        return chars
+    
+    def get_block_id(self, code):
+        for block_id, block in self._blocks.items():
+            if block["range_from"] <= code and code <= block["range_to"]:
+                return block_id
+        return None
+        
+    def get_block_info(self, bid):
+        if bid not in self._blocks:
+            return None
+        return {
+            "id": bid,
+            "name": self._blocks[bid]["name"]
+        }
+    
+    def get_block_infos(self):
+        blocks = []
+        last = -1
+        for c in self._chars:
+            if c is not None and c["block"] != last:
+                last = c["block"]
+                blocks.append(self.get_block_info(last))
+        return blocks
+    
+    
+    def get_subblock_id(self, code):
+        for block_id, block in self._subblocks.items():
+            if block["range_from"] <= code and code <= block["range_to"]:
+                return block_id
+        return None
+    
+    def get_subblock_info(self, sbid):
+        b = self._subblocks[sbid]
+        return {
+            "id": sbid,
+            "name": b["name"]
+        }
+        
+    def load(self):
+        self._load_blocks(app.root_path + '/data/Blocks.txt')
+        self._load_nameslist(app.root_path + '/data/NamesList.txt')
+        self._load_confusables(app.root_path + '/data/confusables.txt')
+        self._determine_prev_next_chars()
+        self._determine_prev_next_blocks()
+    
+    def _load_blocks(self, file_name):
+        if self._blocks is not None:
+            return
+        self._blocks = {}
+        with open(file_name, 'r', encoding='utf-8') as f:
             for line in f:
-                if re.match('^[0-9A-F]{4,5}\t', line):
-                    loaded_chars += 1
-                    if code >= 0:
-                        _extended[code] = (code, name, alternate, comments, related)
+                line = line.strip()
+                if line.startswith('#') or line == '':
+                    continue
+                m = re.split('\.\.|;\s+', line)
+                if len(m) != 3:
+                    continue
+                range_from = int(m[0], 16)
+                range_to = int(m[1], 16)
+                name = m[2]
+                self._blocks[range_from] = {
+                    "id": range_from,
+                    "range_from": range_from,
+                    "range_to": range_to,
+                    "name": name,
+                    "prev": None,
+                    "next": None
+                }
+        
+    def _load_nameslist(self, file_name):
+        if self._chars is not None:
+            return
+        if self._blocks is None:
+            raise RuntimeError("cannot load nameslist. blocks not initialized, yet!")
+        self._chars = [None] * (0x10FFFF + 1)
+        for block_id, block in self._blocks.items():
+            print("add block {:04X}-{:04X}".format(block_id, block["range_to"]))
+            for code in range(block["range_from"], block["range_to"] + 1):
+                self._chars[code] = {
+                    "name": "<unassigned>",
+                    "id": code,
+                    "char": to_utf8(code),
+                    "block": block_id,
+                    "subblock": None,
+                    "alternate": [],
+                    "comments": [],
+                    "related": [],
+                    "confusables": [],
+                    "prev": None,
+                    "next": None
+                }
+        
+        self._subblocks = {}
+        with open(file_name, 'r', encoding='utf-8') as f:
+            code = -1
+            data = None
+            block = None
+            subblock = None
+            blockend = None
+            for line in f:
+                if re.match('^[0-9A-F]{4,6}\t', line):
                     a = line.split('\t')
                     code = int(a[0], 16)
-                    name = a[1]
-                    alternate = []
-                    related = []
-                    comments = []
+                    if code > 0x10FFFF:
+                        raise ValueError("invalid code in line: {}".format(line))
+                    self._chars[code]["name"] = a[1].strip()
                 elif line.startswith('\t='):
-                    alternate.append(line[2:].strip())
+                    self._chars[code]["alternate"].append(line[2:].strip())
                 elif line.startswith('\t*'):
-                    comments.append(line[2:].strip())
+                    self._chars[code]["comments"].append(line[2:].strip())
                 elif line.startswith('\tx'):
-                    line = line[2:].strip()
-                    m = line.split(' - ')
+                    a = line[2:].strip()
+                    m = a.split(' - ')
                     if len(m) == 2:
                         m = m[1].strip()
                         m = re.match('^([0-9A-F]{4,6})\)$', m)
                         if m:
-                            related.append(int(m.group(1), 16))
-                    elif re.match('^[0-9A-F]{4,6}$', line):
-                        related.append(int(line, 16))
+                            code2 = int(m.group(1), 16)
+                            if code2 > 0x10FFFF:
+                                raise ValueError("invalid code in line: {}".format(line))
+                            self._chars[code]["related"].append(code2)
+                    elif re.match('^[0-9A-F]{4,6}$', a):
+                        self._chars[code]["related"].append(int(a, 16))
+                        code2 = int(a, 16)
+                        if code2 > 0x10FFFF:
+                            raise ValueError("invalid code in line: {}".format(line))
+                        self._chars[code]["related"].append(code2)
                     else:
                         app.logger.info('strange related: {}'.format(line))
+                elif line.startswith('@@\t'):
+                    if subblock != None:
+                        self._subblocks[subblock]["range_to"] = blockend
+                        print("subblock {:04X} -> {:04X} 1".format(subblock, blockend))
+                    subblock = None
+                    m = re.match('^@@\t([0-9A-F]{4,6})\t(.*)\t([0-9A-F]{4,6})$', line)
+                    block = int(m.group(1), 16)
+                    code = block-1
+                    if block in self._blocks:
+                        blockend = self._blocks[block]["range_to"]
+                    else:
+                        range_from = block
+                        range_to = int(m.group(3), 16)
+                        blockend = range_to
+                        print('unknown block: {}-{}: {}'.format(m.group(1), m.group(3), m.group(2)))
+                        self._blocks[block] = {
+                            "id": range_from,
+                            "range_from": range_from,
+                            "range_to": range_to,
+                            "name": m.group(2),
+                            "prev": None,
+                            "next": None
+                        }
+                        for code2 in range(range_from, range_to + 1):
+                            self._chars[code2] = {
+                                "name": "<unassigned>",
+                                "id": code,
+                                "char": to_utf8(code),
+                                "block": block,
+                                "subblock": None,
+                                "alternate": [],
+                                "comments": [],
+                                "related": [],
+                                "confusables": [],
+                                "prev": None,
+                                "next": None
+                            }
                 elif line.startswith('@\t\t'):
-                    if subblock_from != None:
-                        _subblocks.append((subblock_from, subblock_name))
-                    subblock_from = code+1
-                    subblock_name = line[3:].strip()
-                    subblock_comments = []
-                elif line.startswith('@+\t\t'):
-                    subblock_comments.append(line[4:].strip())
-                #else:
-                #    print('strange line: {}'.format(line))
-            if code >= 0:
-                _extended[code] = (code, name, alternate, comments, related)
-            if subblock_from != None:
-                _subblocks.append((subblock_from, subblock_name))
-    except IOError as e:
-        app.logger.error("IOError: {}".format(e))
-    except Exception as e:
-        app.logger.error("Exception: {}".format(e))
-    except:
-        e = sys.exc_info()[0]
-        app.logger.error("unknown exception: {}".format(e))
-    app.logger.info("loaded chars: {}".format(loaded_chars))
+                    if subblock != None:
+                        self._subblocks[subblock]["range_to"] = code
+                        print("subblock {:04X} -> {:04X} 2".format(subblock, code))
+                    subblock = code + 1
+                    self._subblocks[subblock] = {
+                        "name": line[3:].strip(),
+                        "range_from": subblock,
+                        "range_to": None
+                    }
+            if subblock != None:
+                print("subblock {:04X} -> {:04X} 3".format(subblock, blockend))
+                self._subblocks[subblock]["range_to"] = blockend
+            for block_id, block in self._subblocks.items():
+                for code in range(block["range_from"], block["range_to"] + 1):
+                    if not self._chars[code]:
+                        print("sub {:04X} {:04X}".format(block_id, code))
+                    self._chars[code]["subblock"] = block_id
     
-    _update_related()
-
-def _get_extended(codepoint):
-    _load_nameslist()
-    if codepoint in _extended:
-        return _extended[codepoint]
-    return None
-
-def _get_subblock(codepoint):
-    subblock_from = None
-    subblock_name = None
-    for (range_from, name) in _subblocks:
-        if range_from > codepoint:
-            return {"name": subblock_name, "from": subblock_from}
-        subblock_name = name
-        subblock_from = range_from
-    if subblock_name:
-        return {"name": subblock_name, "from": subblock_from}
-    return None
+    def _load_confusables(self, file_name):
+        if self._chars is None:
+            raise RuntimeError("cannot load confusables. chars not initialized, yet!")
+        with open(file_name, 'r', encoding='utf-8') as f:
+            sets = {}
+            for line in f:
+                line = line.strip()
+                if line.startswith('#') or line == '':
+                    continue
+                m = re.match('^\s*([0-9A-Fa-f]{4,6})\s*;\s*([0-9A-Fa-f]{4,6})\s*;\s*MA', line)
+                if m:
+                    i1 = int(m.group(1), 16)
+                    i2 = int(m.group(2), 16)
+                    if (i1 > i2):
+                        i1, i2 = i2, i1
+                    if i1 not in sets:
+                        sets[i1] = []
+                        sets[i1].append(i1)
+                    sets[i1].append(i2)
+            for key, value in sets.items():
+                for v in value:
+                    confusables = []
+                    for vv in value:
+                        if vv != v:
+                            confusables.append(vv)
+                    self._chars[v]["confusables"] = confusables
     
-    
-def _update_related():
-    app.logger.info('updating related chars')
-    keys = _extended.keys()
-    for code in keys:
-        rel = _extended[code][4]
-        for r in rel:
-            if r not in _extended:
-                app.logger.info('{}: bad related {}'.format("%0.4X" % code, "%0.4X" % r))
-            (e_code, e_name, e_alternate, e_comments, e_related) = _extended[r]
-            new = e_related
-            new.append(code)
-            new = sorted(list(set(new)))
-            _extended[r] = (e_code, e_name, e_alternate, e_comments, new)
-
-_confusables = {}
-def _load_confusables():
-    if len(_confusables) != 0:
-        return
-    fname = app.root_path + '/data/confusables.txt'
-    app.logger.info("loading: {}".format(fname))
-    with open(fname, 'r', encoding='utf-8') as f:
-        sets = {}
-        for line in f:
-            line = line.strip()
-            if line.startswith('#') or line == '':
+    def _determine_prev_next_chars(self):
+        last = None
+        for i, c in enumerate(self._chars):
+            if c is None:
                 continue
-            m = re.match('^\s*([0-9A-Fa-f]{4,6})\s*;\s*([0-9A-Fa-f]{4,6})\s*;\s*MA', line)
-            if m:
-                i1 = int(m.group(1), 16)
-                i2 = int(m.group(2), 16)
-                if (i1 > i2):
-                    i1, i2 = i2, i1
-                if i1 not in sets:
-                    sets[i1] = []
-                    sets[i1].append(i1)
-                sets[i1].append(i2)
-        for key, value in sets.items():
-            _confusables[key] = value
-            for v in value:
-                values2 = []
-                values2.append(key)
-                for vv in value:
-                    if vv != v:
-                        values2.append(vv)
-                _confusables[v] = values2
-
-def get_confusables(codepoint):
-    if codepoint in _confusables:
-        return _confusables[codepoint]
-    return []
-
-def get_block(name):
-    _load_blocks()
-    _load_nameslist()
+            
+            if last is not None:
+                self._chars[last]["next"] = i
+                c["prev"] = last
+            else:
+                c["prev"] = None
+            c["next"] = None
+            last = i
     
-    name = name.lower()
-    prev_block = None
-    the_block = None
-    next_block = None
-    for (block, block_name, range_from, range_to) in _blocks:
-        if name == block:
-            the_block = {"block": block, "name": block_name, "range_from": range_from, "range_to": range_to}
-        elif the_block is not None:
-            next_block = {"block": block, "name": block_name}
-            break
-        else:
-            prev_block = {"block": block, "name": block_name}
-        
-    if the_block is not None:
-        the_block["prev"] = prev_block
-        the_block["next"] = next_block
-        return the_block
-    return None
-
-
-def get_blocks():
-    _load_blocks()
-    blocks = []
-    for (block, block_name, range_from, range_to) in _blocks:
-        blocks.append({"block": block, "name": block_name})
-    return blocks
+    def _determine_prev_next_blocks(self):
+        last = None
+        for c in self._chars:
+            if c is None:
+                continue
+            b = c["block"]
+            if b != last:
+                if last is not None:
+                    self._blocks[last]["next"] = b
+                self._blocks[b]["prev"] = last
+                self._blocks[b]["next"] = None
+                last = b
+                    

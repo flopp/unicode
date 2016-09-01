@@ -1,6 +1,6 @@
 from www import app
-from www import uinfo
 from flask import render_template
+import copy
 import re
 import unicodedata
 
@@ -12,80 +12,65 @@ def to_utf8(i):
     except UnicodeEncodeError as e:
         return ''
 
-
 @app.before_first_request
 def init():
-    uinfo.init()
+    app.uinfo.load()
 
 
 @app.route('/')
 def welcome():
-    chars = []
-    for i in range(0, 300, 1):
-        c = 33 + i * 23
-        chars.append(dict(
-            code=c,
-            char=to_utf8(c),
-            name=uinfo.get_name(c)
-        ))
-    return render_template("welcome.html", chars=chars, blocks=uinfo.get_blocks())
+    data = { 
+        "chars": app.uinfo.get_random_char_infos(100),
+        "blocks": app.uinfo.get_block_infos()
+    }
+    return render_template("welcome.html", data=data)
 
-
-@app.route('/code/<codepoint>')
-def show_codepoint(codepoint):
-    app.logger.info('get /code/{}'.format(codepoint))
-    if not re.match('^[0-9A-Fa-f]{1,6}$', codepoint):
+@app.route('/c/<code>')
+def show_code(code):
+    app.logger.info('get /c/{}'.format(code))
+    if not re.match('^[0-9A-Fa-f]{1,6}$', code):
         return render_template("404.html")
     
-    codepoint = int(codepoint.lower(), 16)
-    info = uinfo.get_info(codepoint)
+    code = int(code.lower(), 16)
+    info = copy.deepcopy(app.uinfo.get_char(code))
+    
     related = []
     for r in info['related']:
-        related.append(dict(
-            code=r,
-            char=to_utf8(r),
-            name=uinfo.get_name(r)
-        ))
+        related.append(app.uinfo.get_char_info(r))
+    info["related"] = related
     
     confusables = []
-    for r in uinfo.get_confusables(codepoint):
-        confusables.append(dict(
-            code=r,
-            char=to_utf8(r),
-            name=uinfo.get_name(r)
-        ))
+    for r in info["confusables"]:
+        confusables.append(app.uinfo.get_char_info(r))
+    info["confusables"] = confusables
     
-    prev_code = None
-    if codepoint > 0:
-        prev_code = codepoint - 1
-    next_code = None
-    if codepoint < 0x10FFFF:
-        next_code = codepoint + 1
-    return render_template("code.html", 
-        code=codepoint,
-        char=to_utf8(codepoint),
-        name=info['name'],
-        block=info['block'],
-        subblock=info['subblock'],
-        alternate=info['alternate'],
-        comments=info['comments'],
-        related=related,
-        confusables=confusables,
-        prev_code=prev_code,
-        next_code=next_code)
+    info["block"] = app.uinfo.get_block_info(info["block"])
+    info["subblock"] = app.uinfo.get_subblock_info(info["subblock"])
     
+    if info["prev"]:
+        info["prev"] = app.uinfo.get_char_info(info["prev"])
+    if info["next"]:
+        info["next"] = app.uinfo.get_char_info(info["next"])
     
-@app.route('/block/<blockname>')
-def show_block(blockname):
-    app.logger.info('get /block/{}'.format(blockname))
-    block = uinfo.get_block(blockname)
-    if block:
-        chars = []
-        for c in range(block["range_from"], block["range_to"]+1):
-            chars.append(dict(
-                code=c,
-                char=to_utf8(c),
-                name=uinfo.get_name(c)
-            ))
-        return render_template("block.html", block=block, chars=chars)
-    return render_template("404.html")
+    return render_template("code.html", data=info)
+
+@app.route('/b/<code>')
+def show_block(code):
+    app.logger.info('get /b/{}'.format(code))
+    if not re.match('^[0-9A-Fa-f]{1,6}$', code):
+        return render_template("404.html")
+    
+    code = int(code.lower(), 16)
+    info = copy.deepcopy(app.uinfo.get_block(code))
+    if not info:
+        return render_template("404.html")
+    
+    chars = []
+    for c in range(info["range_from"], info["range_to"]+1):
+        chars.append(app.uinfo.get_char_info(c))
+    info["chars"] = chars
+    
+    info["prev"] = app.uinfo.get_block_info(info["prev"])
+    info["next"] = app.uinfo.get_block_info(info["next"])
+    
+    return render_template("block.html", data=info)

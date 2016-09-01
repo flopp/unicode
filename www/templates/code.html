@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}{{ "U+{:04X}: {}".format(code, name) }}{% endblock %}
+{% block title %}{{ "U+{:04X}: {}".format(data.id, data.name) }}{% endblock %}
 
 {% block navigation %}
 <section class="container clearfix">
-{% if prev_code != None %}
-<a class="button button-clear float-left" href="{{ "{:04X}".format(prev_code) }}">◁ {{ "U+{:04X}".format(prev_code) }}</a>
+{% if data.prev != None %}
+<a class="button button-clear float-left" href="{{ "../c/{:04X}".format(data.prev.id) }}">◁ {{ "U+{:04X}: {}".format(data.prev.id, data.prev.name) }}</a>
 {% endif %}
-{% if next_code != None %}
-<a class="button button-clear float-right" href="{{ "{:04X}".format(next_code) }}">{{ "U+{:04X}".format(next_code) }} ▷</a>
+{% if data.next != None %}
+<a class="button button-clear float-right" href="{{ "../c/{:04X}".format(data.next.id) }}">{{ "U+{:04X}: {}".format(data.next.id, data.next.name) }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}
@@ -16,42 +16,42 @@
     
 {% block content %}
 <section class="container">
-<div class="char-big">{{ char }}</div>
-<h1>{{ name }}</h1>
+<div class="char-big">{{ data.char }}</div>
+<h1>{{ data.name }}</h1>
 
 <table class>
-<tr><th class="th">Code</th><td>{{ "U+{:04X}".format(code) }}</td></tr>
-<tr><th class="th">Name</th><td>{{ name }}</td></tr>
-<tr><th class="th">Block</th><td><a href="../block/{{ block.block }}">{{ block.name }}</a></td></tr>
-<tr><th class="th">Sub-Block</th><td>{{ subblock.name }}</td></tr>
-{% if alternate|length > 0 %}
+<tr><th class="th">Code</th><td>{{ "U+{:04X}".format(data.id) }}</td></tr>
+<tr><th class="th">Name</th><td>{{ data.name }}</td></tr>
+<tr><th class="th">Block</th><td><a href="{{ "../b/{:04X}".format(data.block.id) }}">{{ data.block.name }}</a></td></tr>
+<tr><th class="th">Sub-Block</th><td>{{ data.subblock.name }}</td></tr>
+{% if data.alternate|length > 0 %}
 <tr><th class="th">Alternate Name(s)</th><td>
-{% for item in alternate %}{{ item }}<br />{% endfor %}
+{% for item in data.alternate %}{{ item }}<br />{% endfor %}
 </td></tr>
 {% endif %}
-{% if comments|length > 0 %}
+{% if data.comments|length > 0 %}
 <tr><th class="th">Comments</th><td>
-{% for item in comments %}{{ item }}<br />{% endfor %}
+{% for item in data.comments %}{{ item }}<br />{% endfor %}
 </td></tr>
 {% endif %}
 </table>
 
-{% if related|length > 0 %}
-<h2>Related</h2>
+{% if data.related|length > 0 %}
+<h2>Related Characters</h2>
 <div>
-{% for item in related %}
-    <a class="button button-outline btn-char" href="../code/{{ "{:04X}".format(item.code) }}" title="{{ "U+{:04X}: {}".format(item.code, item.name) }}">
+{% for item in data.related %}
+    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
         {{ item.char }}
     </a>
 {% endfor %}
 </div>
 {% endif %}
 
-{% if confusables|length > 0 %}
-<h2>Confusables</h2>
+{% if data.confusables|length > 0 %}
+<h2>Confusables (Look-Alike Characters)</h2>
 <div>
-{% for item in confusables %}
-    <a class="button button-outline btn-char" href="../code/{{ "{:04X}".format(item.code) }}" title="{{ "U+{:04X}: {}".format(item.code, item.name) }}">
+{% for item in data.confusables %}
+    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
         {{ item.char }}
     </a>
 {% endfor %}

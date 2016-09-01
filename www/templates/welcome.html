@@ -10,18 +10,18 @@
 <section class="container">
     <div class="row">
         <div class="column">
-            <h2>Explore Characters</h2>
+            <h2>Explore Random Characters</h2>
             <div>
-                {% for item in chars %}
-                <a class="button button-outline btn-char" href="../code/{{ "{:04X}".format(item.code) }}" title="{{ "U+{:04X}: {}".format(item.code, item.name) }}">{{ item.char }}</a>
+                {% for item in data.chars %}
+                <a class="button button-outline btn-char" href="{{ "c/{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">{{ item.char }}</a>
                 {% endfor %}
             </div>
         </div>
         <div class="column">
             <h2>Explore Blocks</h2>
             <ul>
-                {% for block in blocks %}
-                <li><a href="block/{{ block.block }}">{{ block.name }}</a></li>
+                {% for item in data.blocks %}
+                <li><a href="{{ "b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
