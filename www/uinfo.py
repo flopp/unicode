@@ -39,8 +39,16 @@ class UInfo:
         }
     
     def get_random_char_infos(self, count):
+        import random
+        blocks = [0x1F600, 0x1F0A0, 0x1F680, 0x0370, 0x0F00, 0x0900, 0x0700, 0x0400, 2200, 2190]
+        candidates = []
+        for b in blocks:
+            block = self.get_block(b)
+            if block is not None:
+                for i in range(block["range_from"], block["range_to"] + 1):
+                    candidates.append(i)
         chars = []
-        for code in range(count):
+        for code in random.sample(candidates, count):
             c = self.get_char_info(code)
             if c is not None:
                 chars.append(c)
@@ -121,7 +129,6 @@ class UInfo:
             raise RuntimeError("cannot load nameslist. blocks not initialized, yet!")
         self._chars = [None] * (0x10FFFF + 1)
         for block_id, block in self._blocks.items():
-            print("add block {:04X}-{:04X}".format(block_id, block["range_to"]))
             for code in range(block["range_from"], block["range_to"] + 1):
                 self._chars[code] = {
                     "name": "<unassigned>",
@@ -177,7 +184,6 @@ class UInfo:
                 elif line.startswith('@@\t'):
                     if subblock != None:
                         self._subblocks[subblock]["range_to"] = blockend
-                        print("subblock {:04X} -> {:04X} 1".format(subblock, blockend))
                     subblock = None
                     m = re.match('^@@\t([0-9A-F]{4,6})\t(.*)\t([0-9A-F]{4,6})$', line)
                     block = int(m.group(1), 16)
@@ -214,7 +220,6 @@ class UInfo:
                 elif line.startswith('@\t\t'):
                     if subblock != None:
                         self._subblocks[subblock]["range_to"] = code
-                        print("subblock {:04X} -> {:04X} 2".format(subblock, code))
                     subblock = code + 1
                     self._subblocks[subblock] = {
                         "name": line[3:].strip(),
@@ -222,12 +227,9 @@ class UInfo:
                         "range_to": None
                     }
             if subblock != None:
-                print("subblock {:04X} -> {:04X} 3".format(subblock, blockend))
                 self._subblocks[subblock]["range_to"] = blockend
             for block_id, block in self._subblocks.items():
                 for code in range(block["range_from"], block["range_to"] + 1):
-                    if not self._chars[code]:
-                        print("sub {:04X} {:04X}".format(block_id, code))
                     self._chars[code]["subblock"] = block_id
     
     def _load_confusables(self, file_name):
