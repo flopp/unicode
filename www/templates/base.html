@@ -2,84 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    {% block head %}
+    <link rel="canonical" href="https://unicode.flopp.net/">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.min.css">
-    <title>{% block title %}{% endblock %} - Flopp's Unicode Explorer</title>
-    {% endblock %}
-    <style>
-    body {
-        margin: 0;
-    }
-    .wrapper {
-        display: block;
-        overflow: hidden;
-        position: relative;
-        width: 100%;
-    }
-    .header {
-        background: #f4f5f6;
-        border-bottom: .1rem solid #d1d1d1;
-        display: block;
-        height: 5.2rem;
-        width: 100%;
-        left: 0;
-        max-width: 100vw;
-        max-width: 100%;
-        position: fixed;
-        right: 0;
-        top: 0;
-        z-index: 99;
-    }
-    .navigation-title {
-        font-size: 3rem;
-        font-weight: bold;
-    }
-    .wrapper > .content {
-        padding-bottom: 7.5rem;
-        padding-top: 7.5rem;
-    }
-    
-    .char-big {
-        background-color: #9b4dca;
-        border: .1rem solid #9b4dca;
-        border-radius: .4rem;
-        color: #fff;
-        display: inline-block;
-        font-family: 'Noto Sans script=all'; 
-        font-size: 100px;
-        width: 200px;
-        height: 200px;
-        text-align: center;
-        line-height: 200px;
-        padding: 0;
-        white-space: nowrap;
-    }
-    .btn-char {
-        font-family: 'Noto Sans script=all'; 
-        font-size: 50px;
-        font-weight: 100;
-        width: 88px;
-        height: 88px;
-        text-align: center;
-        line-height: 80px;
-        margin: 8px;
-        padding: 4px;
-        text-transform: none;
-        white-space: nowrap;
-    }
-    .th {
-        width: 8em;
-    }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
+    <title>Flopp's Unicode Explorer - {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
 <body>
     <main class="wrapper">
-        <nav class="header">
+        <nav class="navigation">
             <section class="container">
-                <a class="navigation-title" href="https://unicode.flopp.net/">Flopp's Unicode Explorer</a>
+                <a class="navigation-title" href="https://unicode.flopp.net/">
+                    <img class="img" src="{{ url_for('.static', filename='img/fue.svg') }}" height="30" alt="Flopp's Unicode Explorer" title="Flopp's Unicode Explorer"/>
+                    <h1 class="title">Flopp's Unicode Explorer</h1>
+                </a>
             </section>
         </nav>
     

@@ -4,25 +4,38 @@
 
 {% block content %}
 <section class="container">
-    <h1>Welcome to Flopp's Unicode Explorer!</h1>
+    <div class="banner">
+        <img src="{{ url_for('.static', filename='img/fue.svg') }}" height=150 />
+        <p>
+            Flopps's Unicode Explorer is a experimental website for exploring the complete range of Unicode characters.
+        </p>
+        <p>
+            The source code is available on <a href="https://www.github.com/flopp/unicode-explorer" target="_blank">Github</a>.
+        </p>
+    </div>
 </section>
 
 <section class="container">
+    <h5 class="title">Explore Random Characters</h5>
+    <div>
+        {% for item in data.chars %}
+        <a class="button button-outline btn-char" href="{{ "c/{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">{{ item.char }}</a>
+        {% endfor %}
+    </div>
+    <h5 class="title">Explore Blocks</h5>
     <div class="row">
         <div class="column">
-            <h2>Explore Random Characters</h2>
-            <div>
-                {% for item in data.chars %}
-                <a class="button button-outline btn-char" href="{{ "c/{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">{{ item.char }}</a>
-                {% endfor %}
-            </div>
+            <ul>
+            {% for item in data.blocks1 %}
+            <li><a href="{{ "b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
+            {% endfor %}
+            </ul>
         </div>
         <div class="column">
-            <h2>Explore Blocks</h2>
             <ul>
-                {% for item in data.blocks %}
-                <li><a href="{{ "b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
-                {% endfor %}
+            {% for item in data.blocks2 %}
+            <li><a href="{{ "b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
+            {% endfor %}
             </ul>
         </div>
     </div>

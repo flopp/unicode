@@ -15,14 +15,14 @@
 
 {% block content %}
 <section class="container">
-<h1>Block: {{ data.name }}</h1>
+<h2 class="title">Block: {{ data.name }}</h2>
 
 <table>
     <tr><th class="th">Range</th><td><a href="../c/{{ "{:04X}".format(data.range_from) }}">{{ "U+{:04X}".format(data.range_from) }}</a> - <a href="../c/{{ "{:04X}".format(data.range_to) }}">{{ "U+{:04X}".format(data.range_to) }}</a></td></tr>
     <tr><th class="th">Official Chart</th><td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf</a></td></tr>
 </table>
 
-<h2>Characters</h2>
+<h5 class="title">Characters</h5>
 <div>
 {% for item in data.chars %}
     <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">

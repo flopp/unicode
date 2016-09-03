@@ -1,5 +1,5 @@
 from www import app
-from flask import render_template
+from flask import render_template, url_for
 import copy
 import re
 import unicodedata
@@ -15,13 +15,16 @@ def to_utf8(i):
 @app.before_first_request
 def init():
     app.uinfo.load()
-
-
+    
 @app.route('/')
 def welcome():
+    blocks = app.uinfo.get_block_infos()
+    b1 = blocks[:int(len(blocks)/2)]
+    b2 = blocks[int(len(blocks)/2):] 
     data = { 
-        "chars": app.uinfo.get_random_char_infos(300),
-        "blocks": app.uinfo.get_block_infos()
+        "chars": app.uinfo.get_random_char_infos(32),
+        "blocks1": b1,
+        "blocks2": b2
     }
     return render_template("welcome.html", data=data)
 
