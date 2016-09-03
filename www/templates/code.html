@@ -38,6 +38,15 @@
 {% endif %}
 </table>
 
+{% if data.case != None %}
+<h2>Case Variant</h2>
+<div>
+    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(data.case.id) }}" title="{{ "U+{:04X}: {}".format(data.case.id, data.case.name) }}">
+        {{ data.case.char }}
+    </a>
+</div>
+{% endif %}
+
 {% if data.related|length > 0 %}
 <h2>Related Characters</h2>
 <div>

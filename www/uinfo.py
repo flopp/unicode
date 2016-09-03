@@ -96,6 +96,7 @@ class UInfo:
         self._load_blocks(app.root_path + '/data/Blocks.txt')
         self._load_nameslist(app.root_path + '/data/NamesList.txt')
         self._load_confusables(app.root_path + '/data/confusables.txt')
+        self._load_casefolding(app.root_path + '/data/CaseFolding.txt')
         self._determine_prev_next_chars()
         self._determine_prev_next_blocks()
     
@@ -137,6 +138,7 @@ class UInfo:
                     "char": to_utf8(code),
                     "block": block_id,
                     "subblock": None,
+                    "case": None,
                     "alternate": [],
                     "comments": [],
                     "related": [],
@@ -211,6 +213,7 @@ class UInfo:
                                 "char": to_utf8(code),
                                 "block": block,
                                 "subblock": None,
+                                "case": None,
                                 "alternate": [],
                                 "comments": [],
                                 "related": [],
@@ -259,6 +262,22 @@ class UInfo:
                         if vv != v:
                             confusables.append(vv)
                     self._chars[v]["confusables"] = confusables
+    
+    def _load_casefolding(self, file_name):
+        if self._chars is None:
+            raise RuntimeError("cannot load case folding. chars not initialized, yet!")
+        with open(file_name, 'r', encoding='utf-8') as f:
+            sets = {}
+            for line in f:
+                line = line.strip()
+                if line.startswith('#') or line == '':
+                    continue
+                m = re.match('^\s*([0-9A-Fa-f]{4,6}); C; ([0-9A-Fa-f]{4,6}); #', line)
+                if m:
+                    i1 = int(m.group(1), 16)
+                    i2 = int(m.group(2), 16)
+                    self._chars[i1]["case"] = i2 
+                    self._chars[i2]["case"] = i1
     
     def _determine_prev_next_chars(self):
         last = None

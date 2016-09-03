@@ -44,13 +44,12 @@ def show_code(code):
         confusables.append(app.uinfo.get_char_info(r))
     info["confusables"] = confusables
     
+    info["case"] = app.uinfo.get_char_info(info["case"])
+    info["prev"] = app.uinfo.get_char_info(info["prev"])
+    info["next"] = app.uinfo.get_char_info(info["next"])
+    
     info["block"] = app.uinfo.get_block_info(info["block"])
     info["subblock"] = app.uinfo.get_subblock_info(info["subblock"])
-    
-    if info["prev"]:
-        info["prev"] = app.uinfo.get_char_info(info["prev"])
-    if info["next"]:
-        info["next"] = app.uinfo.get_char_info(info["next"])
     
     return render_template("code.html", data=info)
 
