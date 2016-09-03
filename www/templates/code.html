@@ -23,7 +23,9 @@
 <tr><th class="th">Code</th><td>{{ "U+{:04X}".format(data.id) }}</td></tr>
 <tr><th class="th">Name</th><td>{{ data.name }}</td></tr>
 <tr><th class="th">Block</th><td><a href="{{ "../b/{:04X}".format(data.block.id) }}">{{ data.block.name }}</a></td></tr>
+{% if data.subblock != None %}
 <tr><th class="th">Sub-Block</th><td>{{ data.subblock.name }}</td></tr>
+{% endif %}
 {% if data.alternate|length > 0 %}
 <tr><th class="th">Alternate Name(s)</th><td>
 {% for item in data.alternate %}{{ item }}<br />{% endfor %}

@@ -6,9 +6,11 @@ TARGET_DIR="$1/www/data/"
 NAMESLIST_TARGET="$TARGET_DIR/NamesList.txt"
 BLOCKS_TARGET="$TARGET_DIR/Blocks.txt"
 CONFUSABLES_TARGET="$TARGET_DIR/confusables.txt"
+CASEFOLDING_TARGET="$TARGET_DIR/CaseFolding.txt"
 NAMESLIST_URL="ftp://www.unicode.org/Public/9.0.0/ucd/NamesList.txt"
 BLOCKS_URL="ftp://www.unicode.org/Public/9.0.0/ucd/Blocks.txt"
 CONFUSABLES_URL="ftp://ftp.unicode.org/Public/security/9.0.0/confusables.txt"
+CASEFOLDING_URL="ftp://www.unicode.org/Public/9.0.0/ucd/CaseFolding.txt"
 
 function download() {
     if [ ! -f "$2" ] ; then
@@ -26,3 +28,4 @@ fi
 download $NAMESLIST_URL $NAMESLIST_TARGET
 download $BLOCKS_URL $BLOCKS_TARGET
 download $CONFUSABLES_URL $CONFUSABLES_TARGET
+download $CASEFOLDING_URL $CASEFOLDING_TARGET

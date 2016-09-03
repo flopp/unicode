@@ -40,7 +40,7 @@ class UInfo:
     
     def get_random_char_infos(self, count):
         import random
-        blocks = [0x1F600, 0x1F0A0, 0x1F680, 0x0370, 0x0F00, 0x0900, 0x0700, 0x0400, 2200, 2190]
+        blocks = [0x0180, 0x0250, 0x1F600, 0x1F0A0, 0x1F680, 0x0370, 0x0900, 0x0700, 0x0400, 0x2200, 0x2190]
         candidates = []
         for b in blocks:
             block = self.get_block(b)
@@ -84,11 +84,12 @@ class UInfo:
                 return block_id
         return None
     
-    def get_subblock_info(self, sbid):
-        b = self._subblocks[sbid]
+    def get_subblock_info(self, bid):
+        if bid not in self._subblocks:
+            return None
         return {
-            "id": sbid,
-            "name": b["name"]
+            "id": bid,
+            "name": self._subblocks[bid]["name"]
         }
         
     def load(self):

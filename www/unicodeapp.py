@@ -20,7 +20,7 @@ def init():
 @app.route('/')
 def welcome():
     data = { 
-        "chars": app.uinfo.get_random_char_infos(100),
+        "chars": app.uinfo.get_random_char_infos(300),
         "blocks": app.uinfo.get_block_infos()
     }
     return render_template("welcome.html", data=data)
