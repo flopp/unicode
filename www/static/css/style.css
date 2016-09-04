@@ -2,18 +2,18 @@ body {
         margin: 0;
     }
     
-    .wrapper {
-	display: block;
-	overflow: hidden;
-	position: relative;
-	width: 100%;
+.wrapper {
+    display: block;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
 }
 .wrapper .container {
-	max-width: 80.0rem;
+    max-width: 80.0rem;
 }
 .wrapper > .container {
-	padding-bottom: 7.5rem;
-	padding-top: 7.5rem;
+    padding-bottom: 7.5rem;
+    padding-top: 7.5rem;
 }
 
 .wrapper > .content {
@@ -22,114 +22,114 @@ body {
     }
 
 .navigation {
-	left: 0;
-	max-width: 100vw;
-	max-width: 100%;
-	position: fixed;
-	right: 0;
-	top: 0;
-	z-index: 99;
+    left: 0;
+    max-width: 100vw;
+    max-width: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 99;
 }
 /* Re-overiding the width 100% declaration to match size of% based container */
 .navigation .container {
-	padding-bottom: 0;
-	padding-top: 0;
+    padding-bottom: 0;
+    padding-top: 0;
 }
 .navigation {
-	background: #f4f5f6;
-	border-bottom: .1rem solid #d1d1d1;
-	display: block;
-	height: 5.2rem;
-	width: 100%;
+    background: #f4f5f6;
+    border-bottom: .1rem solid #d1d1d1;
+    display: block;
+    height: 5.2rem;
+    width: 100%;
 }
 .navigation-list {
-	list-style: none;
-	margin-bottom: 0;
-	margin-right: 5.0rem;
+    list-style: none;
+    margin-bottom: 0;
+    margin-right: 5.0rem;
 }
 @media (min-width: 80.0rem) {
-	.navigation-list {
-		margin-right: 0;
-	}
+    .navigation-list {
+        margin-right: 0;
+    }
 }
 .navigation-item {
-	float: left;
-	margin-bottom: 0;
-	margin-left: 2.5rem;
-	position: relative;
+    float: left;
+    margin-bottom: 0;
+    margin-left: 2.5rem;
+    position: relative;
 }
 .navigation .img {
-	height: 2.0rem;
-	position: relative;
-	top: .3rem;
+    height: 2.0rem;
+    position: relative;
+    top: .3rem;
 }
 .navigation .title,
 .navigation-title {
-	color: #606c76;
-	display: inline;
-	font-family: 'Gotham Rounded A', 'Gotham Rounded B', 'Helvetica Neue', Arial, sans-serif;
-	font-size: 1.6rem;
-	line-height: 5.2rem;
-	padding: 0;
-	position: relative;
-	text-decoration: none;
+    color: #606c76;
+    display: inline;
+    font-family: 'Gotham Rounded A', 'Gotham Rounded B', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.6rem;
+    line-height: 5.2rem;
+    padding: 0;
+    position: relative;
+    text-decoration: none;
 }
 .navigation-link {
-	display: inline;
-	font-size: 1.6rem;
-	line-height: 5.2rem;
-	padding: 0;
-	text-decoration: none;
+    display: inline;
+    font-size: 1.6rem;
+    line-height: 5.2rem;
+    padding: 0;
+    text-decoration: none;
 }
 .navigation-link.active {
-	color: #606c76;
+    color: #606c76;
 }
 
 .banner {
-	background: #f4f5f6;
-	display: block;
-	width: 100%;
+    background: #f4f5f6;
+    display: block;
+    width: 100%;
     text-align: center;
     padding: 5rem;
 }
     
-    .char-big {
-        background-color: #9b4dca;
-        border: .1rem solid #9b4dca;
-        border-radius: .4rem;
-        color: #fff;
-        display: inline-block;
-        font-family: 'Noto Sans script=all'; 
-        font-size: 100px;
-        width: 200px;
-        height: 200px;
-        text-align: center;
-        line-height: 200px;
-        padding: 0;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-    .btn-char {
-        font-family: 'Noto Sans script=all'; 
-        font-size: 50px;
-        font-weight: 100;
-        width: 88px;
-        height: 88px;
-        text-align: center;
-        line-height: 80px;
-        margin: 8px;
-        padding: 4px;
-        text-transform: none;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-    .th {
-        width: 8em;
-    }
-    .onlyonsmall { display: block; }
-    .onlyonlarge { display: none; }
-    @media screen and (min-width: 60rem) {
-        .onlyonsmall { display: none; }
-        .onlyonlarge { display: block; }
-    }
+.char-big {
+    background-color: #9b4dca;
+    border: .1rem solid #9b4dca;
+    border-radius: .4rem;
+    color: #fff;
+    display: inline-block;
+    font-family: 'Noto Sans script=all'; 
+    font-size: 100px;
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    line-height: 200px;
+    padding: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.btn-char {
+    font-family: 'Noto Sans script=all'; 
+    font-size: 50px;
+    font-weight: 100;
+    width: 88px;
+    height: 88px;
+    text-align: center;
+    line-height: 80px;
+    margin: 4px;
+    padding: 4px;
+    text-transform: none;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.th {
+    width: 8em;
+}
 
+.onlyonsmall { display: block; }
+.onlyonlarge { display: none; }
+@media screen and (min-width: 60rem) {
+    .onlyonsmall { display: none; }
+    .onlyonlarge { display: block; }
+}

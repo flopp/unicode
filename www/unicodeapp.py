@@ -2,7 +2,6 @@ from www import app
 from flask import render_template, url_for
 import copy
 import re
-import unicodedata
 
 
 def to_utf8(i):
