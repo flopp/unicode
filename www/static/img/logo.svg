@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="25"
+   width="17"
    height="13"
-   viewBox="0 0 25 13"
+   viewBox="0 0 17 13"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="fue-black.svg">
+   sodipodi:docname="ue.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="53.68"
-     inkscape:cx="9.7744844"
-     inkscape:cy="6.9627422"
+     inkscape:cx="10.40953"
+     inkscape:cy="6.9254844"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -60,22 +60,7 @@
      id="layer1"
      transform="translate(0,-1039.3622)">
     <g
-       transform="translate(-107.5,703.49998)"
-       id="g4154-3"
-       style="stroke:#9b4dca;stroke-opacity:1">
-      <path
-         inkscape:connector-curvature="0"
-         id="path4144-6"
-         d="m 108,336.36222 0,12 4,0 0,-4 4,0 0,-8 z"
-         style="fill:none;fill-rule:evenodd;stroke:#9b4dca;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path4146-7"
-         d="m 112,340.36222 4,0"
-         style="fill:none;fill-rule:evenodd;stroke:#9b4dca;stroke-width:1px;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1" />
-    </g>
-    <g
-       transform="translate(-109.5,703.49998)"
+       transform="translate(-117.5,703.49998)"
        id="g4158-5"
        style="stroke:#9b4dca;stroke-opacity:1">
       <path
@@ -91,7 +76,7 @@
     </g>
     <g
        id="g4223"
-       transform="translate(17.5,671.49998)"
+       transform="translate(9.5,671.49998)"
        style="stroke:#9b4dca;stroke-opacity:1">
       <path
          inkscape:connector-curvature="0"

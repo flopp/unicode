@@ -18,13 +18,7 @@ scp www/templates/*.html $SERVER:$BASE/www/templates/
 scp other/unicode.fcgi   $SERVER:fcgi-bin/
 scp other/.htaccess      $SERVER:html/unicode/
 
-echo "-- running kill script"
-ssh $SERVER $BASE/scripts/kill-server.sh
-
-echo "-- updating data files"
-ssh $SERVER $BASE/scripts/get-datafiles.sh $BASE
-
-echo "-- setting up venv"
-ssh $SERVER $BASE/scripts/setup-venv.sh    $BASE
+echo "-- running post copy script"
+ssh $SERVER $BASE/scripts/post-copy.sh $BASE
 
 echo "-- done"

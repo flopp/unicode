@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <title>Unicode Explorer - {% block title %}{% endblock %}</title>
     <link rel="canonical" href="https://unicode.flopp.net/">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.min.css">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
-    <title>Flopp's Unicode Explorer - {% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('.static', filename='img/favicon.png') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
@@ -15,8 +16,8 @@
         <nav class="navigation">
             <section class="container">
                 <a class="navigation-title" href="https://unicode.flopp.net/">
-                    <img class="img" src="{{ url_for('.static', filename='img/fue.svg') }}" height="30" alt="Flopp's Unicode Explorer" title="Flopp's Unicode Explorer"/>
-                    <h1 class="title">Flopp's Unicode Explorer</h1>
+                    <img class="img" src="{{ url_for('.static', filename='img/logo.svg') }}" height="30" alt="Unicode Explorer" title="Unicode Explorer"/>
+                    <h1 class="title">Unicode Explorer</h1>
                 </a>
             </section>
         </nav>
