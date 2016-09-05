@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<section class="container">
+<h2 class="title">Search Results</h2>
+{%if msg != None %}
+<p>{{ msg }}</p>
+{% endif %}
+
+{%if matches != None %}
+<h5 class="title">Characters</h5>
+<div>
+{% for item in matches %}
+    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
+        {{ item.char }}
+    </a>
+{% endfor %}
+</div>
+{% endif %}
+</section>
+{% endblock %}

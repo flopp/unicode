@@ -16,25 +16,20 @@
 </section>
 
 <section class="container">
-    <h5 class="title">Explore Random Characters</h5>
-    <div>
-        {% for item in data.chars %}
-        <a class="button button-outline btn-char" href="{{ "c/{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">{{ item.char }}</a>
-        {% endfor %}
-    </div>
+    {{ macros.title_icons("Some Random Characters", data.chars) }}
     <h5 class="title">Explore Blocks</h5>
     <div class="row">
         <div class="column">
             <ul>
             {% for item in data.blocks1 %}
-            <li><a href="{{ "b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
+            <li><a href="{{ "/b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
             {% endfor %}
             </ul>
         </div>
         <div class="column">
             <ul>
             {% for item in data.blocks2 %}
-            <li><a href="{{ "b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
+            <li><a href="{{ "/b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
             {% endfor %}
             </ul>
         </div>

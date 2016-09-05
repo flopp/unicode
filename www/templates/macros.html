@@ -1,0 +1,26 @@
+{% macro char_icon(item) -%}
+<a class="button button-outline btn-char" href="/c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
+    {{ item.char }}
+</a>
+{%- endmacro %}
+
+{% macro title_icon(title, item) -%}
+{% if item != None %}
+<h5 class="title">{{ title }}</h5>
+<div>
+    {{ char_icon(item) }}
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro title_icons(title, items) -%}
+{% if items|length > 0 %}
+<h5 class="title">{{ title }}</h5>
+<div>
+{% for item in items %}
+    {{ char_icon(item) }}
+{% endfor %}
+</div>
+{% endif %}
+{%- endmacro %}
+

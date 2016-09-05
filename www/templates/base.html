@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('.static', filename='img/favicon.png') }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#9b4dca">
 </head>
-
+{% import 'macros.html' as macros %}
 <body>
     <main class="wrapper">
         <nav class="navigation">
@@ -19,6 +20,10 @@
                     <img class="img" src="{{ url_for('.static', filename='img/logo.svg') }}" height="30" alt="Unicode Explorer" title="Unicode Explorer"/>
                     <h1 class="title">Unicode Explorer</h1>
                 </a>
+                <form action="/search" method="POST" class="float-right" style="line-height: 5.2rem; margin: 0; position: absolute; top: 0; left: 20rem; right: 1rem;">
+                <input type="text" placeholder="Search" name="q" style="background: white; width: 100%; margin: 0;">
+                <input style="display: none;" type="submit" name="search-form" value="Search">
+            </form>
             </section>
         </nav>
     

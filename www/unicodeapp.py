@@ -1,5 +1,5 @@
 from www import app
-from flask import render_template, url_for
+from flask import render_template, url_for, request
 import copy
 import re
 
@@ -75,3 +75,13 @@ def show_block(code):
     info["next"] = app.uinfo.get_block_info(info["next"])
     
     return render_template("block.html", data=info)
+
+
+@app.route('/search', methods=['POST'])
+def search():
+    query = request.form['q']
+    app.logger.info('get /search/{}'.format(query))
+    if len(query) < 3:
+        return render_template("search_results.html", msg="The search keyword must at least be 3 characters long.", matches=None)
+    matches, msg = app.uinfo.search_by_name(query, 100)
+    return render_template("search_results.html", msg=msg, matches=matches)

@@ -5,12 +5,10 @@
 {% block navigation %}
 <section class="container clearfix">
 {% if data.prev != None %}
-<a class="onlyonlarge button button-clear float-left" href="{{ "../c/{:04X}".format(data.prev.id) }}">◁ {{ "U+{:04X}: {}".format(data.prev.id, data.prev.name) }}</a>
-<a class="onlyonsmall button button-clear float-left" href="{{ "../c/{:04X}".format(data.prev.id) }}">◁ {{ "U+{:04X}".format(data.prev.id) }}</a>
+<a class="button button-clear float-left" href="{{ "/c/{:04X}".format(data.prev.id) }}">◁ {{ "U+{:04X}".format(data.prev.id) }}</a>
 {% endif %}
 {% if data.next != None %}
-<a class="onlyonlarge button button-clear float-right" href="{{ "../c/{:04X}".format(data.next.id) }}">{{ "U+{:04X}: {}".format(data.next.id, data.next.name) }} ▷</a>
-<a class="onlyonsmall button button-clear float-right" href="{{ "../c/{:04X}".format(data.next.id) }}">{{ "U+{:04X}".format(data.next.id) }} ▷</a>
+<a class="button button-clear float-right" href="{{ "/c/{:04X}".format(data.next.id) }}">{{ "U+{:04X}".format(data.next.id) }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}
@@ -24,7 +22,7 @@
 <table class>
 <tr><th class="th">Code</th><td>{{ "U+{:04X}".format(data.id) }}</td></tr>
 <tr><th class="th">Name</th><td>{{ data.name }}</td></tr>
-<tr><th class="th">Block</th><td><a href="{{ "../b/{:04X}".format(data.block.id) }}">{{ data.block.name }}</a></td></tr>
+<tr><th class="th">Block</th><td><a href="{{ "/b/{:04X}".format(data.block.id) }}">{{ data.block.name }}</a></td></tr>
 {% if data.subblock != None %}
 <tr><th class="th">Sub-Block</th><td>{{ data.subblock.name }}</td></tr>
 {% endif %}
@@ -40,37 +38,9 @@
 {% endif %}
 </table>
 
-{% if data.case != None %}
-<h5 class="title">Case Variant</h5>
-<div>
-    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(data.case.id) }}" title="{{ "U+{:04X}: {}".format(data.case.id, data.case.name) }}">
-        {{ data.case.char }}
-    </a>
-</div>
-{% endif %}
-
-{% if data.related|length > 0 %}
-<h5 class="title">Related Characters</h5>
-<div>
-{% for item in data.related %}
-    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
-        {{ item.char }}
-    </a>
-{% endfor %}
-</div>
-{% endif %}
-
-{% if data.confusables|length > 0 %}
-<h5 class="title">Confusables (Look-Alike Characters)</h5>
-<div>
-{% for item in data.confusables %}
-    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
-        {{ item.char }}
-    </a>
-{% endfor %}
-</div>
-{% endif %}
-
+{{ macros.title_icon("Case Variant", data.case) }}
+{{ macros.title_icons("Related Characters", data.related) }}
+{{ macros.title_icons("Confusables (Look-Alike Characters)", data.confusables) }}
 
 </section>
 {% endblock %}

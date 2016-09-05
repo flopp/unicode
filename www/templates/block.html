@@ -5,10 +5,10 @@
 {% block navigation %}
 <section class="container clearfix">
 {% if data.prev != None %}
-<a class="button button-clear float-left" href="{{ "../b/{:04X}".format(data.prev.id) }}">◁ {{ "{:04X}: {}".format(data.prev.id, data.prev.name) }}</a>
+<a class="button button-clear float-left" href="{{ "/b/{:04X}".format(data.prev.id) }}">◁ {{ "{:04X}: {}".format(data.prev.id, data.prev.name) }}</a>
 {% endif %}
 {% if data.next != None %}
-<a class="button button-clear float-right" href="{{ "../b/{:04X}".format(data.next.id) }}">{{ "{:04X}: {}".format(data.next.id, data.next.name) }} ▷</a>
+<a class="button button-clear float-right" href="{{ "/b/{:04X}".format(data.next.id) }}">{{ "{:04X}: {}".format(data.next.id, data.next.name) }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}
@@ -18,17 +18,10 @@
 <h2 class="title">Block: {{ data.name }}</h2>
 
 <table>
-    <tr><th class="th">Range</th><td><a href="../c/{{ "{:04X}".format(data.range_from) }}">{{ "U+{:04X}".format(data.range_from) }}</a> - <a href="../c/{{ "{:04X}".format(data.range_to) }}">{{ "U+{:04X}".format(data.range_to) }}</a></td></tr>
+    <tr><th class="th">Range</th><td><a href="/c/{{ "{:04X}".format(data.range_from) }}">{{ "U+{:04X}".format(data.range_from) }}</a> - <a href="/c/{{ "{:04X}".format(data.range_to) }}">{{ "U+{:04X}".format(data.range_to) }}</a></td></tr>
     <tr><th class="th">Official Chart</th><td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf</a></td></tr>
 </table>
 
-<h5 class="title">Characters</h5>
-<div>
-{% for item in data.chars %}
-    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
-        {{ item.char }}
-    </a>
-{% endfor %}
-</div>
+{{ macros.title_icons("Characters", data.chars) }}
 </section>
 {% endblock %}

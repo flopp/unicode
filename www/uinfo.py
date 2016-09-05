@@ -93,12 +93,17 @@ class UInfo:
         }
         
     def load(self):
+        import time
+        start_time = time.time()
         self._load_blocks(app.root_path + '/data/Blocks.txt')
         self._load_nameslist(app.root_path + '/data/NamesList.txt')
         self._load_confusables(app.root_path + '/data/confusables.txt')
         self._load_casefolding(app.root_path + '/data/CaseFolding.txt')
+        self._load_unihan(app.root_path + '/data/Unihan_Readings.txt')
         self._determine_prev_next_chars()
         self._determine_prev_next_blocks()
+        elapsed_time = time.time() - start_time
+        print('-- loading time: {}s'.format(elapsed_time))
     
     def _load_blocks(self, file_name):
         if self._blocks is not None:
@@ -240,12 +245,13 @@ class UInfo:
         if self._chars is None:
             raise RuntimeError("cannot load confusables. chars not initialized, yet!")
         with open(file_name, 'r', encoding='utf-8') as f:
+            rx = re.compile('^\s*([0-9A-Fa-f]{4,6})\s*;\s*([0-9A-Fa-f]{4,6})\s*;\s*MA')
             sets = {}
             for line in f:
                 line = line.strip()
                 if line.startswith('#') or line == '':
                     continue
-                m = re.match('^\s*([0-9A-Fa-f]{4,6})\s*;\s*([0-9A-Fa-f]{4,6})\s*;\s*MA', line)
+                m = rx.match(line)
                 if m:
                     i1 = int(m.group(1), 16)
                     i2 = int(m.group(2), 16)
@@ -267,18 +273,33 @@ class UInfo:
         if self._chars is None:
             raise RuntimeError("cannot load case folding. chars not initialized, yet!")
         with open(file_name, 'r', encoding='utf-8') as f:
+            rx = re.compile('^\s*([0-9A-Fa-f]{4,6}); C; ([0-9A-Fa-f]{4,6}); #')
             sets = {}
             for line in f:
                 line = line.strip()
                 if line.startswith('#') or line == '':
                     continue
-                m = re.match('^\s*([0-9A-Fa-f]{4,6}); C; ([0-9A-Fa-f]{4,6}); #', line)
+                m = rx.match(line)
                 if m:
                     i1 = int(m.group(1), 16)
                     i2 = int(m.group(2), 16)
                     self._chars[i1]["case"] = i2 
                     self._chars[i2]["case"] = i1
     
+    def _load_unihan(self, file_name):
+        if self._chars is None:
+            raise RuntimeError("cannot load unihan. chars not initialized, yet!")
+        with open(file_name, 'r', encoding='utf-8') as f:
+            rx = re.compile('^U\+([0-9A-Fa-f]{4,6})\tkDefinition\t(.*)$')
+            for line in f:
+                line = line.strip()
+                m = rx.match(line)
+                if m:
+                    i = int(m.group(1), 16)
+                    if (i >= len(self._chars)):
+                        continue
+                    self._chars[i]["name"] = m.group(2)
+            
     def _determine_prev_next_chars(self):
         last = None
         for i, c in enumerate(self._chars):
@@ -305,4 +326,38 @@ class UInfo:
                 self._blocks[b]["prev"] = last
                 self._blocks[b]["next"] = None
                 last = b
+    
+    def search_by_name(self, keyword, limit):
+        keyword = keyword.upper()
+        matches = []
+        deprioritized_blocks = [0x2E80, 0x2F00, 0x31C0, 0x3300, 0x3400, 0x4E00, 0xF900, 0x20000, 0x2A700, 0x2B740, 0x2B820, 0x2F800]
+        limit_reached = False
+        for i, c in enumerate(self._chars):
+            if c is None:
+                continue
+            if c["block"] in deprioritized_blocks:
+                continue
+            s = c["name"].upper()
+            if keyword in s:
+                if len(matches) >= limit:
+                    limit_reached = True
+                    break
+                matches.append(self.get_char_info(i))
+                continue
+        for i, c in enumerate(self._chars):
+            if c is None:
+                continue
+            if c["block"] not in deprioritized_blocks:
+                continue
+            s = c["name"].upper()
+            if keyword in s:
+                if len(matches) >= limit:
+                    limit_reached = True
+                    break
+                matches.append(self.get_char_info(i))
+                continue
+        if limit_reached:
+            return matches, "Search aborted after {} matches".format(limit)
+        else:
+            return matches, None
                     
