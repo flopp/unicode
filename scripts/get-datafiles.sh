@@ -24,7 +24,7 @@ function download() {
 
 if [ ! -d "$TARGET_DIR" ] ; then
     echo "-- TARGET_DIR does not exist: $TARGET_DIR"
-    exit 1
+    mkdir -p $TARGET_DIR
 fi
 
 
