@@ -1,0 +1,10 @@
+---
+- hosts: grus
+  vars:
+   - repo: https://github.com/flopp/unicode-explorer.git
+   - basedir: /home/flopp/projects/unicode
+  tasks:
+   - name: Update from github
+     git: repo={{ repo }} dest={{ basedir }} accept_hostkey=yes
+   - name: Run post copy script
+     command: /home/flopp/projects/unicode/scripts/post-copy.sh /home/flopp/projects/unicode
