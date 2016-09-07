@@ -328,6 +328,10 @@ class UInfo:
                 last = b
     
     def search_by_name(self, keyword, limit):
+        if len(keyword) == 0:
+            return [], "Empty query :("
+        if len(keyword) == 1:
+            return [self.get_char_info(ord(keyword))], None
         keyword = keyword.upper()
         matches = []
         deprioritized_blocks = [0x2E80, 0x2F00, 0x31C0, 0x3300, 0x3400, 0x4E00, 0xF900, 0x20000, 0x2A700, 0x2B740, 0x2B820, 0x2F800]

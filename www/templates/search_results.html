@@ -9,15 +9,7 @@
 <p>{{ msg }}</p>
 {% endif %}
 
-{%if matches != None %}
-<h5 class="title">Characters</h5>
-<div>
-{% for item in matches %}
-    <a class="button button-outline btn-char" href="../c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
-        {{ item.char }}
-    </a>
-{% endfor %}
-</div>
-{% endif %}
+{{ macros.title_icons("Characters", matches) }}
+
 </section>
 {% endblock %}

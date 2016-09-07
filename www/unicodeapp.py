@@ -81,7 +81,5 @@ def show_block(code):
 def search():
     query = request.form['q']
     app.logger.info('get /search/{}'.format(query))
-    if len(query) < 3:
-        return render_template("search_results.html", msg="The search keyword must at least be 3 characters long.", matches=None)
     matches, msg = app.uinfo.search_by_name(query, 100)
     return render_template("search_results.html", msg=msg, matches=matches)
