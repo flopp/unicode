@@ -328,33 +328,42 @@ class UInfo:
                 last = b
     
     def search_by_name(self, keyword, limit):
+        # check keyword "as is"
+        if len(keyword) == 1:
+            return [self.get_char_info(ord(keyword))], None
+        keyword = keyword.strip()
         if len(keyword) == 0:
             return [], "Empty query :("
         if len(keyword) == 1:
             return [self.get_char_info(ord(keyword))], None
-        keyword = keyword.upper()
+        keywords = []
+        for k in keyword.upper().split():
+            k = k.strip()
+            if k != '':
+                keywords.append(k) 
         matches = []
+        # CJK blocks are deprioritized, since their characters have very long descriptive names
         deprioritized_blocks = [0x2E80, 0x2F00, 0x31C0, 0x3300, 0x3400, 0x4E00, 0xF900, 0x20000, 0x2A700, 0x2B740, 0x2B820, 0x2F800]
         limit_reached = False
+        # search in non-deprioritized blocks first
         for i, c in enumerate(self._chars):
             if c is None:
                 continue
             if c["block"] in deprioritized_blocks:
                 continue
-            s = c["name"].upper()
-            if keyword in s:
+            if self.all_in(keywords, c["name"].upper()):
                 if len(matches) >= limit:
                     limit_reached = True
                     break
                 matches.append(self.get_char_info(i))
                 continue
+        # search in deprioritized blocks
         for i, c in enumerate(self._chars):
             if c is None:
                 continue
             if c["block"] not in deprioritized_blocks:
                 continue
-            s = c["name"].upper()
-            if keyword in s:
+            if self.all_in(keywords, c["name"].upper()):
                 if len(matches) >= limit:
                     limit_reached = True
                     break
@@ -364,4 +373,9 @@ class UInfo:
             return matches, "Search aborted after {} matches".format(limit)
         else:
             return matches, None
-                    
+    
+    def all_in(self, needles, haystack):
+        for n in needles:
+            if n not in haystack:
+                return False
+        return True
