@@ -94,10 +94,10 @@ body {
 }
     
 .char-big {
-    background-color: #9b4dca;
+    background-color: #fff;
     border: .1rem solid #9b4dca;
     border-radius: .4rem;
-    color: #fff;
+    color: #9b4dca;
     display: inline-block;
     font-family: 'Noto Sans script=all'; 
     font-size: 100px;
