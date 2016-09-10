@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Unicode Explorer - {% block title %}{% endblock %}</title>
     <link rel="canonical" href="https://unicode.flopp.net/">
+    {% if config.GOOGLE_SITE_VERIFICATION %} {{ config.GOOGLE_SITE_VERIFICATION|safe }} {% endif %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.min.css">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
@@ -39,22 +40,8 @@
         <footer>
     </main>
 
-<!-- Piwik -->
-<script type="text/javascript">
-  var _paq = _paq || [];
-  _paq.push(["setDomains", ["*.unicode.flopp.net"]]);
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//flopp.grus.uberspace.de/piwik/";
-    _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', '3']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-  })();
-</script>
-<noscript><p><img src="//flopp.grus.uberspace.de/piwik/piwik.php?idsite=3" style="border:0;" alt="" /></p></noscript>
-<!-- End Piwik Code -->
-
+    {% if config.PIWIK %} {{ config.PIWIK|safe }} {% endif %}
+    
+    {{ config.BLUBB }}
 </body>
 </html>
