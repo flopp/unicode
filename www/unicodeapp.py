@@ -1,5 +1,5 @@
 from www import app
-from flask import render_template, url_for, request
+from flask import render_template, url_for, request, redirect
 import copy
 import re
 
@@ -26,6 +26,7 @@ def welcome():
         "blocks2": b2
     }
     return render_template("welcome.html", data=data)
+
 
 @app.route('/c/<code>')
 def show_code(code):
@@ -55,6 +56,12 @@ def show_code(code):
     
     return render_template("code.html", data=info)
 
+
+@app.route('/code/<code>')
+def show_code_old(code):
+    return redirect(url_for('show_code', code=code))
+
+
 @app.route('/b/<code>')
 def show_block(code):
     app.logger.info('get /b/{}'.format(code))
@@ -76,6 +83,14 @@ def show_block(code):
     
     return render_template("block.html", data=info)
 
+
+@app.route('/block/<name>')
+def show_block_old(name):
+    i = app.uinfo.get_block_id_by_name(name)
+    if i >= 0:
+        return redirect(url_for('show_block', code="{:04X}".format(i)))
+    return render_template("404.html")
+    
 
 @app.route('/search', methods=['POST'])
 def search():

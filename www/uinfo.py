@@ -59,6 +59,15 @@ class UInfo:
             if block["range_from"] <= code and code <= block["range_to"]:
                 return block_id
         return None
+    
+    def get_block_id_by_name(self, name):
+        rx = re.compile('[^a-z]+')
+        name = rx.sub('', name.lower()) 
+        
+        for _, block in self._blocks.items():
+            if rx.sub('', block["name"].lower()) == name:
+                return block["id"]
+        return -1
         
     def get_block_info(self, bid):
         if bid not in self._blocks:
