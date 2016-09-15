@@ -1,4 +1,4 @@
-from www import app
+from www import app, cache
 from flask import render_template, url_for, request, redirect
 import copy
 import re
@@ -29,6 +29,7 @@ def welcome():
 
 
 @app.route('/c/<code>')
+@cache.memoize(50)
 def show_code(code):
     app.logger.info('get /c/{}'.format(code))
     if not re.match('^[0-9A-Fa-f]{1,6}$', code):
@@ -63,6 +64,7 @@ def show_code_old(code):
 
 
 @app.route('/b/<code>')
+@cache.memoize(50)
 def show_block(code):
     app.logger.info('get /b/{}'.format(code))
     if not re.match('^[0-9A-Fa-f]{1,6}$', code):
