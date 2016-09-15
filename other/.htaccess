@@ -7,8 +7,12 @@
 </IfModule>
 
 <IfModule mod_rewrite.c>
-   RewriteEngine On
-   RewriteBase /
-   RewriteCond %{REQUEST_FILENAME} !-f
-   RewriteRule ^(.*)$ /fcgi-bin/unicode.fcgi/$1 [QSA,L]
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{ENV:HTTPS} !=on
+    RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L]
+    
+    RewriteBase /
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ /fcgi-bin/unicode.fcgi/$1 [QSA,L]
 </IfModule>
