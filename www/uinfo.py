@@ -109,6 +109,7 @@ class UInfo:
         self._load_confusables(app.root_path + '/data/confusables.txt')
         self._load_casefolding(app.root_path + '/data/CaseFolding.txt')
         self._load_unihan(app.root_path + '/data/Unihan_Readings.txt')
+        self._load_wikipedia(app.root_path + '/data/wikipedia.html')
         self._determine_prev_next_chars()
         self._determine_prev_next_blocks()
         elapsed_time = time.time() - start_time
@@ -134,6 +135,7 @@ class UInfo:
                     "range_from": range_from,
                     "range_to": range_to,
                     "name": name,
+                    "wikipedia": None,
                     "prev": None,
                     "next": None
                 }
@@ -217,6 +219,7 @@ class UInfo:
                             "range_from": range_from,
                             "range_to": range_to,
                             "name": m.group(2),
+                            "wikipedia": None,
                             "prev": None,
                             "next": None
                         }
@@ -308,7 +311,41 @@ class UInfo:
                     if (i >= len(self._chars)):
                         continue
                     self._chars[i]["name"] = m.group(2)
-            
+    
+    def _load_wikipedia(self, file_name):
+        if self._chars is None:
+            raise RuntimeError("cannot load wikipedia. chars not initialized, yet!")
+        with open(file_name, 'r', encoding='utf-8') as f:
+            rx1 = re.compile('^<td><span class="sortkey">.*</span>U\+([0-9A-Fa-f]{4,6})\.\.U\+([0-9A-Fa-f]{4,6})</td>')
+            rx2 = re.compile('^<td><a href="([^"]*)".*title="([^"]*)">')
+            range_from = None
+            range_to = None
+            url = None
+            title = None
+            for line in f:
+                line = line.strip()
+                if range_from is None:
+                    m = rx1.match(line)
+                    if m:
+                        range_from = int(m.group(1), 16)
+                        range_to = int(m.group(2), 16)
+                else:
+                    m = rx2.match(line)
+                    if m:
+                        url = m.group(1)
+                        title = m.group(2)
+                        block = self.get_block(range_from)
+                        if block:
+                            block["wikipedia"] = "https://en.wikipedia.org{}".format(url)
+                        else:
+                            print("wikipedia: block not found: {}".format(range_from))
+                    else:
+                        print("wikipedia: bad second line: {}".format(line))
+                    range_from = None
+                    range_to = None
+                    url = None
+                    title = None
+    
     def _determine_prev_next_chars(self):
         last = None
         for i, c in enumerate(self._chars):
