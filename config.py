@@ -3,7 +3,9 @@ import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 
+BASE_URL = '''https://unicode.flopp.net'''
 GOOGLE_SITE_VERIFICATION = '''<meta name="google-site-verification" content="dFepbcMFobUP1XDk52zR2kMAHQE5WFYB0XOAwBapyzE" />'''
+BING_SITE_VERIFICATION = '''<meta name="msvalidate.01" content="4464AD705C0E043DA95988604D1E5B6E" />'''
 
 PIWIK = '''<!-- Piwik -->
 <script type="text/javascript">

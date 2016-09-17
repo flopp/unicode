@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
 {% block title %}{{ "U+{:04X}: {}".format(data.id, data.name) }}{% endblock %}
+{% block canonical %}{{ "/c/{:04X}".format(data.id) }}{% endblock %}
 
 {% block navigation %}
 <section class="container clearfix">
 {% if data.prev != None %}
-<a class="button button-clear float-left" href="{{ "/c/{:04X}".format(data.prev.id) }}">◁ {{ "U+{:04X}".format(data.prev.id) }}</a>
+<a class="button button-clear float-left" href="{{ "/c/{:04X}".format(data.prev.id) }}" rel="prev">◁ {{ "U+{:04X}".format(data.prev.id) }}</a>
 {% endif %}
 {% if data.next != None %}
-<a class="button button-clear float-right" href="{{ "/c/{:04X}".format(data.next.id) }}">{{ "U+{:04X}".format(data.next.id) }} ▷</a>
+<a class="button button-clear float-right" href="{{ "/c/{:04X}".format(data.next.id) }}" rel="next">{{ "U+{:04X}".format(data.next.id) }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}

@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>Unicode Explorer - {% block title %}{% endblock %}</title>
-    <link rel="canonical" href="https://unicode.flopp.net/">
-    {% if config.GOOGLE_SITE_VERIFICATION %} {{ config.GOOGLE_SITE_VERIFICATION|safe }} {% endif %}
+    {% if self.canonical() %}<link rel="canonical" href="{{ config.BASE_URL }}{% block canonical %}{% endblock %}" />{% endif %}
+    {% if config.GOOGLE_SITE_VERIFICATION %}{{ config.GOOGLE_SITE_VERIFICATION|safe }}{% endif %}
+    {% if config.BING_SITE_VERIFICATION %}{{ config.BING_SITE_VERIFICATION|safe }}{% endif %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.min.css">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
@@ -35,7 +36,7 @@
     
         <footer class="footer">
             <div class="container">
-                An experimental website by <a href="http://www.florian-pigorsch.de/">Florian Pigorsch</a>.
+                An experimental website by <a href="http://www.florian-pigorsch.de/" rel="author" target="_blank">Florian Pigorsch</a>.
             </div>
         <footer>
     </main>
