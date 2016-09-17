@@ -20,9 +20,9 @@
 
 <table>
     <tr><th class="th">Range</th><td><a href="/c/{{ "{:04X}".format(data.range_from) }}">{{ "U+{:04X}".format(data.range_from) }}</a> - <a href="/c/{{ "{:04X}".format(data.range_to) }}">{{ "U+{:04X}".format(data.range_to) }}</a></td></tr>
-    <tr><th class="th">Official Chart</th><td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf</a></td></tr>
+    <tr><th class="th">Official Chart (external)</th><td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf</a></td></tr>
     {% if data.wikipedia %}
-    <tr><th class="th">Wikipedia</th><td><a href="{{ data.wikipedia }}" target="_blank">{{ data.wikipedia }}</a></td></tr>
+    <tr><th class="th">Wikipedia (external)</th><td><a href="{{ data.wikipedia }}" target="_blank">{{ data.wikipedia }}</a></td></tr>
     {% endif %}
 </table>
 

@@ -37,6 +37,7 @@
 {% for item in data.comments %}{{ item }}<br />{% endfor %}
 </td></tr>
 {% endif %}
+<tr><th class="th">Character Info (external)</th><td><a href="http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}" target="_blank">http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}</a></td></tr>
 </table>
 
 {{ macros.title_icon("Case Variant", data.case) }}
