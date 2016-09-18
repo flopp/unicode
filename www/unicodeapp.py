@@ -31,7 +31,6 @@ def welcome():
 @app.route('/c/<code>')
 @cache.memoize(50)
 def show_code(code):
-    app.logger.info('get /c/{}'.format(code))
     if not re.match('^[0-9A-Fa-f]{1,6}$', code):
         return render_template("404.html")
     
@@ -66,7 +65,6 @@ def show_code_old(code):
 @app.route('/b/<code>')
 @cache.memoize(50)
 def show_block(code):
-    app.logger.info('get /b/{}'.format(code))
     if not re.match('^[0-9A-Fa-f]{1,6}$', code):
         return render_template("404.html")
     
