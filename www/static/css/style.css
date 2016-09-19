@@ -122,6 +122,10 @@ body {
     white-space: nowrap;
     overflow: hidden;
 }
+.emoji {
+    width: 44px;
+    height: 44px;
+}
 .th {
     width: 8em;
 }

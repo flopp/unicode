@@ -38,6 +38,9 @@
 </td></tr>
 {% endif %}
 <tr><th class="th">Character Info (external)</th><td><a href="http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}" target="_blank">http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}</a></td></tr>
+{% if data.emoji %}
+<tr><th class="th"><a href="http://emojione.com/" target="_blank">EmojiOne</a></th><td><img class="emoji" src="{{ data.emoji }}" /></td></tr>
+{% endif %}
 </table>
 
 {{ macros.title_icon("Case Variant", data.case) }}

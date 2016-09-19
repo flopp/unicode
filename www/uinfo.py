@@ -110,6 +110,7 @@ class UInfo:
         self._load_casefolding(app.root_path + '/data/CaseFolding.txt')
         self._load_unihan(app.root_path + '/data/Unihan_Readings.txt')
         self._load_wikipedia(app.root_path + '/data/wikipedia.html')
+        self._load_emojione(app.root_path + '/data/emojione.css')
         self._determine_prev_next_chars()
         self._determine_prev_next_blocks()
         elapsed_time = time.time() - start_time
@@ -345,6 +346,22 @@ class UInfo:
                     range_to = None
                     url = None
                     title = None
+    
+    def _load_emojione(self, file_name):
+        if self._chars is None:
+            raise RuntimeError("cannot load emojione. chars not initialized, yet!")
+        with open(file_name, 'r', encoding='utf-8') as f:
+            rx = re.compile('.*//(.*)/([0-9A-Fa-f]{4,6})\.svg')
+            for line in f:
+                m = rx.match(line)
+                if m is None:
+                    continue
+                code = int(m.group(2), 16)
+                url = "https:{}/{}.svg".format(m.group(1), m.group(2))
+                if (code >= len(self._chars)):
+                    continue
+                self._chars[code]["emoji"] = url
+                print("{:04X} {}".format(code, url))
     
     def _determine_prev_next_chars(self):
         last = None
