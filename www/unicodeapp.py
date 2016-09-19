@@ -35,7 +35,10 @@ def show_code(code):
         return render_template("404.html")
     
     code = int(code.lower(), 16)
-    info = copy.deepcopy(app.uinfo.get_char(code))
+    info = app.uinfo.get_char(code)
+    if info is None:
+        return render_template("404.html")
+    info = copy.deepcopy(info)
     
     related = []
     for r in info['related']:
