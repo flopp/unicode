@@ -109,6 +109,7 @@ class UInfo:
         self._load_confusables(app.root_path + '/data/confusables.txt')
         self._load_casefolding(app.root_path + '/data/CaseFolding.txt')
         self._load_unihan(app.root_path + '/data/Unihan_Readings.txt')
+        self._load_hangul(app.root_path + '/data/hangul.txt')
         self._load_wikipedia(app.root_path + '/data/wikipedia.html')
         self._load_emojione(app.root_path + '/data/emojione.css')
         self._determine_prev_next_chars()
@@ -361,7 +362,24 @@ class UInfo:
                 if (code >= len(self._chars)):
                     continue
                 self._chars[code]["emoji"] = url
-                print("{:04X} {}".format(code, url))
+    
+    def _load_hangul(self, file_name):
+        if self._chars is None:
+            raise RuntimeError("cannot load hangul. chars not initialized, yet!")
+        with open(file_name, 'r', encoding='utf-8') as f:
+            #   423	0xAE28	긨 (HANGUL SYLLABLE GYISS)
+            rx = re.compile('^\s*[0-9]+\s*0x([0-9A-Fa-f]{4,6})\s+.*\((.+)\)\s*$')
+            for line in f:
+                line = line.strip()
+                m = rx.match(line)
+                if m is None:
+                    continue
+                code = int(m.group(1), 16)
+                if (code >= len(self._chars)):
+                    continue
+                name = m.group(2)
+                if self._chars[code]["name"] == '<unassigned>':
+                    self._chars[code]["name"] = name
     
     def _determine_prev_next_chars(self):
         last = None
