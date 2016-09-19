@@ -351,7 +351,7 @@ class UInfo:
         if self._chars is None:
             raise RuntimeError("cannot load emojione. chars not initialized, yet!")
         with open(file_name, 'r', encoding='utf-8') as f:
-            rx = re.compile('.*//(.*)/([0-9A-Fa-f]{4,6})\.svg')
+            rx = re.compile('.*(//.*)/([0-9A-Fa-f]{4,6})\.svg')
             for line in f:
                 m = rx.match(line)
                 if m is None:
