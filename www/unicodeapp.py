@@ -104,4 +104,4 @@ def search():
     query = request.form['q']
     app.logger.info('get /search/{}'.format(query))
     matches, msg = app.uinfo.search_by_name(query, 100)
-    return render_template("search_results.html", msg=msg, matches=matches)
+    return render_template("search_results.html", query=query, msg=msg, matches=matches)
