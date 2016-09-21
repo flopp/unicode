@@ -27,6 +27,10 @@ def welcome():
     }
     return render_template("welcome.html", data=data)
 
+@app.route('/sitemap.txt')
+@cache.memoize(50)
+def sitemap():
+    return render_template("sitemap.txt", blocks=app.uinfo.get_block_infos())
 
 @app.route('/c/<code>')
 @cache.memoize(50)
