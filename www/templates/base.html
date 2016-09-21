@@ -23,10 +23,11 @@
                     <img class="img" src="{{ url_for('.static', filename='img/logo.svg') }}" height="30" alt="Unicode Explorer" title="Unicode Explorer"/>
                     <h1 class="title">Unicode Explorer</h1>
                 </a>
-                <form action="/search" method="POST" class="float-right" style="line-height: 5.2rem; margin: 0; position: absolute; top: 0; left: 20rem; right: 1rem;">
-                <input type="text" placeholder="Search" name="q" style="background: white; width: 100%; margin: 0;">
-                <input style="display: none;" type="submit" name="search-form" value="Search">
-            </form>
+                <form action="/search" method="POST" class="search-form float-right" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction" onsubmit="_paq.push(['trackSiteSearch', document.getElementsByClassName('search-input')[0].value]);">
+                    <meta itemprop="target" content="{ config.BASE_URL }}/search?q={search_term_string}"/>
+                    <input type="text" placeholder="Search" name="q" class="search-input" itemprop="query-input" name="search_term_string" required>
+                    <input type="submit" name="search-form" style="display: none;" value="Search">
+                </form>
             </section>
         </nav>
     

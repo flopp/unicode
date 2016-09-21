@@ -85,6 +85,21 @@ body {
     color: #606c76;
 }
 
+.search-form {
+    line-height: 5.2rem;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 20rem;
+    right: 1rem;   
+}
+
+.search-input {
+    background: white;
+    width: 100%;
+    margin: 0;
+}
+
 .banner {
     background: #f4f5f6;
     display: block;
