@@ -105,3 +105,7 @@ def search():
     app.logger.info('get /search/{}'.format(query))
     matches, msg = app.uinfo.search_by_name(query, 100)
     return render_template("search_results.html", query=query, msg=msg, matches=matches)
+
+@app.route('/search', methods=['GET'])
+def search_bad_method():
+    return redirect(url_for('welcome'))

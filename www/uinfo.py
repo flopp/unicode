@@ -409,19 +409,26 @@ class UInfo:
                 last = b
     
     def search_by_name(self, keyword, limit):
-        # check keyword "as is"
+        # check keyword "as is" (single char)
         if len(keyword) == 1:
-            return [self.get_char_info(ord(keyword))], None
+            return [self.get_char_info(ord(keyword))], "Direct character match."
         keyword = keyword.strip()
         if len(keyword) == 0:
             return [], "Empty query :("
         if len(keyword) == 1:
-            return [self.get_char_info(ord(keyword))], None
+            return [self.get_char_info(ord(keyword))], "Direct character match."
         keywords = []
         for k in keyword.upper().split():
             k = k.strip()
             if k != '':
-                keywords.append(k) 
+                keywords.append(k)
+        if len(keywords) == 1:
+            m = re.match('^U?\+?([0-9A-F]{1,6})$', keywords[0], re.IGNORECASE)
+            if m:
+                c = self.get_char_info(int(m.group(1).lower(), 16))
+                if c:
+                    return [c], "Direct codepoint match."            
+        
         matches = []
         # CJK blocks are deprioritized, since their characters have very long descriptive names
         deprioritized_blocks = [0x2E80, 0x2F00, 0x31C0, 0x3300, 0x3400, 0x4E00, 0xF900, 0x20000, 0x2A700, 0x2B740, 0x2B820, 0x2F800]
