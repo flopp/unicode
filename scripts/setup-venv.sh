@@ -9,15 +9,19 @@ if [ ! -d "$1" ] ; then
     exit 1
 fi
 
-if [ -d "$TARGET_DIR" ] ; then
-    exit 0
+if [ ! -d "$TARGET_DIR" ] ; then
+    echo "setting up venv: $TARGET_DIR"
+    
+    for VE_BIN in /usr/bin/virtualenv ~/bin/virtualenv ; do
+        if [ -e $VE_BIN ] ; then
+            $VE_BIN -p python3 "$TARGET_DIR"
+            break
+        fi
+    done
 fi
-
-echo "setting up venv: $TARGET_DIR"
-
-~/bin/virtualenv -p python3 "$TARGET_DIR"
 
 source "$TARGET_DIR/bin/activate"
 pip3 install flask
 pip3 install flipflop
 pip3 install Flask-Caching
+pip3 install wikipedia

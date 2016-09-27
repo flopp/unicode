@@ -1,6 +1,7 @@
 from www import app
 import unicodedata
 import re
+import wikipedia
 
 def sanitize_name(s):
     non_alphanum = re.compile('([^a-z0-9])')
@@ -27,7 +28,17 @@ class UInfo:
     def get_block(self, bid):
         if bid not in self._blocks:
             return None
-        return self._blocks[bid]
+        block = self._blocks[bid]
+        if block['wikipedia_summary'] is None:
+            if block['wikipedia'] is not None:
+                try:
+                    topic = block['wikipedia'].split('/')[-1].replace('_',  ' ')
+                    block['wikipedia_summary'] = wikipedia.summary(topic, sentences=3)
+                except:
+                    block['wikipedia_summary'] = ""
+            else:
+                block['wikipedia_summary'] = ""
+        return block
     
     def get_char_info(self, code):
         if code is None or code >= len(self._chars) or self._chars[code] is None:
@@ -138,6 +149,7 @@ class UInfo:
                     "range_to": range_to,
                     "name": name,
                     "wikipedia": None,
+                    "wikipedia_summary": None,
                     "prev": None,
                     "next": None
                 }
@@ -222,6 +234,7 @@ class UInfo:
                             "range_to": range_to,
                             "name": m.group(2),
                             "wikipedia": None,
+                            "wikipedia_summary": None,
                             "prev": None,
                             "next": None
                         }
@@ -339,10 +352,13 @@ class UInfo:
                         block = self.get_block(range_from)
                         if block:
                             block["wikipedia"] = "https://en.wikipedia.org{}".format(url)
+                            block["wikipedia_summary"] = None
                         else:
                             print("wikipedia: block not found: {}".format(range_from))
+                            block["wikipedia_summary"] = ""
                     else:
                         print("wikipedia: bad second line: {}".format(line))
+                        block["wikipedia_summary"] = ""
                     range_from = None
                     range_to = None
                     url = None
