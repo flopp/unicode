@@ -38,7 +38,7 @@ def sitemap():
 
 @app.route('/robots.txt')
 @cache.memoize(120)
-def sitemap():
+def robots():
     return render_template("robots.txt")
 
 
