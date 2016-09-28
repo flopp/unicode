@@ -11,9 +11,11 @@ def to_utf8(i):
     except UnicodeEncodeError as e:
         return ''
 
+
 @app.before_first_request
 def init():
     app.uinfo.load()
+
     
 @app.route('/')
 def welcome():
@@ -27,13 +29,21 @@ def welcome():
     }
     return render_template("welcome.html", data=data)
 
+
 @app.route('/sitemap.txt')
-@cache.memoize(50)
+@cache.memoize(120)
 def sitemap():
     return render_template("sitemap.txt", blocks=app.uinfo.get_block_infos())
 
+
+@app.route('/robots.txt')
+@cache.memoize(120)
+def sitemap():
+    return render_template("robots.txt")
+
+
 @app.route('/c/<code>')
-@cache.memoize(50)
+@cache.memoize(120)
 def show_code(code):
     if not re.match('^[0-9A-Fa-f]{1,6}$', code):
         return render_template("404.html")
@@ -70,7 +80,7 @@ def show_code_old(code):
 
 
 @app.route('/b/<code>')
-@cache.memoize(50)
+@cache.memoize(120)
 def show_block(code):
     if not re.match('^[0-9A-Fa-f]{1,6}$', code):
         return render_template("404.html")
