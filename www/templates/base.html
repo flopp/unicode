@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <title>Unicode Explorer - {% block title %}{% endblock %}</title>
     {% if self.canonical() %}<link rel="canonical" href="{{ config.BASE_URL }}{% block canonical %}{% endblock %}" />{% endif %}
-    {% if config.GOOGLE_SITE_VERIFICATION %}{{ config.GOOGLE_SITE_VERIFICATION|safe }}{% endif %}
-    {% if config.BING_SITE_VERIFICATION %}{{ config.BING_SITE_VERIFICATION|safe }}{% endif %}
-    {% if config.YANDEX_SITE_VERIFICATION %}{{ config.YANDEX_SITE_VERIFICATION|safe }}{% endif %}
+    {{ config.META|safe }}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.min.css">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
@@ -43,6 +41,6 @@
         <footer>
     </main>
 
-    {% if config.PIWIK %} {{ config.PIWIK|safe }} {% endif %}
+    {{ config.BOTTOM|safe }}
 </body>
 </html>
