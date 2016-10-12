@@ -23,6 +23,7 @@
 <table class>
 <tr><th class="th">Code</th><td>{{ "U+{:04X}".format(data.id) }}</td></tr>
 <tr><th class="th">Name</th><td>{{ data.name }}</td></tr>
+<tr><th class="th">Copy to Clipboard</th><td><div class="input-group"><input type="text" id="copy-code" value="{{ data.char }}"><span class="input-group-button"><button id="copy-btn" class="btn" data-clipboard-target="#copy-code">Copy!</button></span></div></td></tr>
 <tr><th class="th">Block</th><td><a href="{{ "/b/{:04X}".format(data.block.id) }}">{{ data.block.name }}</a></td></tr>
 {% if data.subblock != None %}
 <tr><th class="th">Sub-Block</th><td>{{ data.subblock.name }}</td></tr>
@@ -48,4 +49,19 @@
 {{ macros.title_icons("Confusables (Look-Alike Characters)", data.confusables) }}
 
 </section>
+{% endblock %}
+
+{% block script %}
+<script>
+    function init_clipboard() {
+        
+        new Clipboard('#copy-btn');
+    }
+    
+    if (addEventListener in document) {
+        document.addEventListener('load', init_clipboard(), false);
+    } else {
+        document.onload = init_clipboard();
+    }
+</script>
 {% endblock %}

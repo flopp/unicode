@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.min.css">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('.static', filename='img/favicon.png') }}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.12/clipboard.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="theme-color" content="#9b4dca">
 </head>
@@ -41,6 +42,7 @@
         <footer>
     </main>
 
+    {% block script %} {% endblock %}
     {{ config.BOTTOM|safe }}
 </body>
 </html>

@@ -145,6 +145,30 @@ body {
     width: 8em;
 }
 
+.input-group {
+    display: table;
+    width: 90%;
+}
+.input-group input {
+    display: table-cell;
+    position: relative;
+    width: 100%;
+    vertical-align: middle;
+    margin: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.input-group .input-group-button {
+    display: table-cell;
+    width: 1%;
+    vertical-align: middle;
+}
+.input-group button {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 .onlyonsmall { display: block; }
 .onlyonlarge { display: none; }
 @media screen and (min-width: 60rem) {
