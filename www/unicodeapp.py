@@ -118,4 +118,4 @@ def search():
 
 @app.route('/search', methods=['GET'])
 def search_bad_method():
-    return redirect(url_for('welcome'))
+    return redirect('/')
