@@ -21,8 +21,8 @@ def format_wikipedia(s):
     rx_h3 = re.compile(r'^=== (.*) ===$')
     rx_u = re.compile(r'U\+[0-9A-Fa-f]{4,6}\b')
     rx_u1 = re.compile(r'^U\+([0-9A-Fa-f]{4,6})$')
-    rx_ur = re.compile(r'–[0-9A-Fa-f]{4,6}\b')
-    rx_ur1 = re.compile(r'^–([0-9A-Fa-f]{4,6})$')
+    rx_ur = re.compile(r'[-–—][0-9A-Fa-f]{4,6}\b')
+    rx_ur1 = re.compile(r'^.*\b([0-9A-Fa-f]{4,6})$')
     for line in s.split('\n'):
         line = line.strip()
         if len(line) == 0:
