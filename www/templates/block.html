@@ -31,7 +31,7 @@
     <tr>
         <th class="th">Wikipedia</th>
         <td>
-            {% if data.wikipedia_summary|length > 0 %}{{ data.wikipedia_summary }}<br />{% endif %}
+            {% if data.wikipedia_summary|length > 0 %}{{ data.wikipedia_summary|safe }}<br />{% endif %}
             <a href="{{ data.wikipedia }}" target="_blank">{{ data.wikipedia }}</a>
         </td>
     </tr>

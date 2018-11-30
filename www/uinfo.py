@@ -14,6 +14,47 @@ def to_utf8(i):
     except UnicodeEncodeError as e:
         return ''
 
+def format_wikipedia(s):
+    res = []
+    last_empty = True
+    rx_h2 = re.compile(r'^== (.*) ==$')
+    rx_h3 = re.compile(r'^=== (.*) ===$')
+    rx_u = re.compile(r'U\+[0-9A-Fa-f]{4,6}\b')
+    rx_u1 = re.compile(r'^U\+([0-9A-Fa-f]{4,6})$')
+    rx_ur = re.compile(r'–[0-9A-Fa-f]{4,6}\b')
+    rx_ur1 = re.compile(r'^–([0-9A-Fa-f]{4,6})$')
+    for line in s.split('\n'):
+        line = line.strip()
+        if len(line) == 0:
+            if not last_empty:
+                res.append('')
+            last_empty = True
+            continue
+        
+        last_empty = False;
+        m = rx_h2.match(line)
+        if m:
+            res.append('<b>{}</b>'.format(m.group(1)))
+            continue
+        m = rx_h3.match(line)
+        if m:
+            res.append('<b>{}</b>'.format(m.group(1)))
+            continue
+        
+        replacements = []
+        for m in rx_u.findall(line):
+            m1 = rx_u1.match(m)
+            code = m1.group(1).upper()
+            replacements.append((m, '<a href="/c/{}">U+{}</a>'.format(code, code)))
+        for m in rx_ur.findall(line):
+            m1 = rx_ur1.match(m)
+            code = m1.group(1).upper()
+            replacements.append((m, '–<a href="/c/{}">U+{}</a>'.format(code, code)))
+        for r in replacements:
+            line = line.replace(r[0], r[1])
+        res.append(line)
+    return '<br />\n'.join(res)
+
 class UInfo:
     def __init__(self):
         self._blocks = None
@@ -33,8 +74,9 @@ class UInfo:
             if block['wikipedia'] is not None:
                 try:
                     topic = block['wikipedia'].split('/')[-1].replace('_',  ' ')
-                    block['wikipedia_summary'] = wikipedia.summary(topic, sentences=3)
-                except:
+                    block['wikipedia_summary'] = format_wikipedia(wikipedia.summary(topic, sentences=3))
+                except Exception as e:
+                    print(e)
                     block['wikipedia_summary'] = ""
             else:
                 block['wikipedia_summary'] = ""
@@ -122,7 +164,6 @@ class UInfo:
         self._load_unihan(app.root_path + '/data/Unihan_Readings.txt')
         self._load_hangul(app.root_path + '/data/hangul.txt')
         self._load_wikipedia(app.root_path + '/data/wikipedia.html')
-        self._load_emojione(app.root_path + '/data/emojione.css')
         self._determine_prev_next_chars()
         self._determine_prev_next_blocks()
         elapsed_time = time.time() - start_time
@@ -331,7 +372,7 @@ class UInfo:
         if self._chars is None:
             raise RuntimeError("cannot load wikipedia. chars not initialized, yet!")
         with open(file_name, 'r', encoding='utf-8') as f:
-            rx1 = re.compile('^<td><span class="sortkey">.*</span>U\+([0-9A-Fa-f]{4,6})\.\.U\+([0-9A-Fa-f]{4,6})</td>')
+            rx1 = re.compile('^<td data-sort-value=".*">U\+([0-9A-Fa-f]{4,6})\.\.U\+([0-9A-Fa-f]{4,6})</td>')
             rx2 = re.compile('^<td><a href="([^"]*)".*title="([^"]*)">')
             range_from = None
             range_to = None
@@ -363,21 +404,6 @@ class UInfo:
                     range_to = None
                     url = None
                     title = None
-    
-    def _load_emojione(self, file_name):
-        if self._chars is None:
-            raise RuntimeError("cannot load emojione. chars not initialized, yet!")
-        with open(file_name, 'r', encoding='utf-8') as f:
-            rx = re.compile('.*(//.*)/([0-9A-Fa-f]{4,6})\.svg')
-            for line in f:
-                m = rx.match(line)
-                if m is None:
-                    continue
-                code = int(m.group(2), 16)
-                url = "https:{}/{}.svg".format(m.group(1), m.group(2))
-                if (code >= len(self._chars)):
-                    continue
-                self._chars[code]["emoji"] = url
     
     def _load_hangul(self, file_name):
         if self._chars is None:
@@ -459,7 +485,7 @@ class UInfo:
                 if len(matches) >= limit:
                     limit_reached = True
                     break
-                matches.append(self.get_char_info(i))
+                matches.append((self.get_char_info(i), len(c["name"])))
                 continue
         # search in deprioritized blocks
         for i, c in enumerate(self._chars):
@@ -471,8 +497,9 @@ class UInfo:
                 if len(matches) >= limit:
                     limit_reached = True
                     break
-                matches.append(self.get_char_info(i))
+                matches.append((self.get_char_info(i), 10 * len(c["name"])))
                 continue
+        matches = list(map(lambda x: x[0], sorted(matches, key=lambda x: x[1])))
         if limit_reached:
             return matches, "Search aborted after {} matches".format(limit)
         else:

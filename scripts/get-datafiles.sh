@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 TARGET_DIR="$1/www/data/"
 NAMESLIST_TARGET="$TARGET_DIR/NamesList.txt"
@@ -13,11 +13,12 @@ WIKIPEDIA_TARGET="$TARGET_DIR/wikipedia.html"
 EMOJIONE_TARGET="$TARGET_DIR/emojione.css"
 HANGUL_TARGET="$TARGET_DIR/hangul.txt"
 
-NAMESLIST_URL="ftp://www.unicode.org/Public/9.0.0/ucd/NamesList.txt"
-BLOCKS_URL="ftp://www.unicode.org/Public/9.0.0/ucd/Blocks.txt"
-CONFUSABLES_URL="ftp://ftp.unicode.org/Public/security/9.0.0/confusables.txt"
-CASEFOLDING_URL="ftp://www.unicode.org/Public/9.0.0/ucd/CaseFolding.txt"
-UNIHAN_URL="ftp://www.unicode.org/Public/9.0.0/ucd/Unihan.zip"
+UNICODE="11.0.0"
+NAMESLIST_URL="ftp://www.unicode.org/Public/${UNICODE}/ucd/NamesList.txt"
+BLOCKS_URL="ftp://www.unicode.org/Public/${UNICODE}/ucd/Blocks.txt"
+CONFUSABLES_URL="ftp://ftp.unicode.org/Public/security/${UNICODE}/confusables.txt"
+CASEFOLDING_URL="ftp://www.unicode.org/Public/${UNICODE}/ucd/CaseFolding.txt"
+UNIHAN_URL="ftp://www.unicode.org/Public/${UNICODE}/ucd/Unihan.zip"
 WIKIPEDIA_URL="https://en.wikipedia.org/wiki/Unicode_block"
 EMOJIONE_URL="https://raw.githubusercontent.com/Ranks/emojione/master/assets/css/emojione-awesome.css"
 HANGUL_URL="https://raw.githubusercontent.com/whatwg/encoding/master/index-euc-kr.txt"
@@ -35,7 +36,7 @@ if [ ! -d "$TARGET_DIR" ] ; then
 fi
 
 download $HANGUL_URL $HANGUL_TARGET
-download $EMOJIONE_URL $EMOJIONE_TARGET
+#download $EMOJIONE_URL $EMOJIONE_TARGET
 download $WIKIPEDIA_URL $WIKIPEDIA_TARGET
 download $NAMESLIST_URL $NAMESLIST_TARGET
 download $BLOCKS_URL $BLOCKS_TARGET
