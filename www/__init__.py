@@ -16,4 +16,3 @@ import www.error
 import www.uinfo
 
 app.uinfo = uinfo.UInfo()
-
