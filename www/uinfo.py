@@ -1,11 +1,12 @@
 from www import app
-import unicodedata
 import re
 import wikipedia
+
 
 def sanitize_name(s):
     non_alphanum = re.compile('([^a-z0-9])')
     return non_alphanum.sub(r'\\\1', s.strip().lower())
+
 
 def to_utf8(i):
     try:
@@ -13,6 +14,7 @@ def to_utf8(i):
         return chr(i)
     except UnicodeEncodeError as e:
         return ''
+
 
 def format_wikipedia(s):
     res = []
@@ -54,6 +56,7 @@ def format_wikipedia(s):
             line = line.replace(r[0], r[1])
         res.append(line)
     return '<br />\n'.join(res)
+
 
 class UInfo:
     def __init__(self):
@@ -109,7 +112,7 @@ class UInfo:
     
     def get_block_id(self, code):
         for block_id, block in self._blocks.items():
-            if block["range_from"] <= code and code <= block["range_to"]:
+            if block["range_from"] <= code <= block["range_to"]:
                 return block_id
         return None
     
@@ -138,11 +141,10 @@ class UInfo:
                 last = c["block"]
                 blocks.append(self.get_block_info(last))
         return blocks
-    
-    
+
     def get_subblock_id(self, code):
         for block_id, block in self._subblocks.items():
-            if block["range_from"] <= code and code <= block["range_to"]:
+            if block["range_from"] <= code <= block["range_to"]:
                 return block_id
         return None
     
@@ -308,6 +310,25 @@ class UInfo:
             for block_id, block in self._subblocks.items():
                 for code in range(block["range_from"], block["range_to"] + 1):
                     self._chars[code]["subblock"] = block_id
+        self._detect_codes_in_comments()
+
+    def _detect_codes_in_comments(self):
+        r = re.compile(r'\b[0-9A-F]{4,6}\b')
+        for c in self._chars:
+            if c is None:
+                continue
+            comments = c['comments']
+            new_comments = []
+            for comment in comments:
+                replacements = []
+                for code in r.findall(comment):
+                    char_info = self.get_char_info(int(code.lower(), 16))
+                    if char_info is not None:
+                        replacements.append((code, '<a href="/c/{}">U+{}</a>'.format(code, code)))
+                for replacement in replacements:
+                    comment = comment.replace(replacement[0], replacement[1])
+                new_comments.append(comment)
+            c['comments'] = new_comments
     
     def _load_confusables(self, file_name):
         if self._chars is None:
@@ -323,7 +344,7 @@ class UInfo:
                 if m:
                     i1 = int(m.group(1), 16)
                     i2 = int(m.group(2), 16)
-                    if (i1 > i2):
+                    if i1 > i2:
                         i1, i2 = i2, i1
                     if i1 not in sets:
                         sets[i1] = []
@@ -342,7 +363,6 @@ class UInfo:
             raise RuntimeError("cannot load case folding. chars not initialized, yet!")
         with open(file_name, 'r', encoding='utf-8') as f:
             rx = re.compile('^\s*([0-9A-Fa-f]{4,6}); C; ([0-9A-Fa-f]{4,6}); #')
-            sets = {}
             for line in f:
                 line = line.strip()
                 if line.startswith('#') or line == '':
@@ -364,7 +384,7 @@ class UInfo:
                 m = rx.match(line)
                 if m:
                     i = int(m.group(1), 16)
-                    if (i >= len(self._chars)):
+                    if i >= len(self._chars):
                         continue
                     self._chars[i]["name"] = m.group(2)
     
@@ -417,7 +437,7 @@ class UInfo:
                 if m is None:
                     continue
                 code = int(m.group(1), 16)
-                if (code >= len(self._chars)):
+                if code >= len(self._chars):
                     continue
                 name = m.group(2)
                 if self._chars[code]["name"] == '<unassigned>':

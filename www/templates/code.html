@@ -35,7 +35,7 @@
 {% endif %}
 {% if data.comments|length > 0 %}
 <tr><th class="th">Comments</th><td>
-{% for item in data.comments %}{{ item }}<br />{% endfor %}
+{% for item in data.comments %}{{ item|safe }}<br />{% endfor %}
 </td></tr>
 {% endif %}
 <tr><th class="th">Character Info (external)</th><td><a href="http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}" target="_blank">http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}</a></td></tr>
