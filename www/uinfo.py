@@ -10,9 +10,12 @@ def sanitize_name(s):
 
 def to_utf8(i):
     try:
-        return chr(i)
-    except UnicodeEncodeError as e:
-        return ''
+        c = chr(i)
+        # try to encode c as utf-8 (this fails e.g. for surrogates)
+        c.encode('utf-8')
+        return c
+    except Exception:
+        return None
 
 
 def format_wikipedia(s):

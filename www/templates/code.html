@@ -13,17 +13,20 @@
 {% endif %}
 </section>
 {% endblock %}
-   
-    
+
 {% block content %}
 <section class="container">
+{% if data.char != None %}
 <div class="char-big">{{ data.char }}</div>
+{% endif %}
 <h2 class="title">{{ data.name }}</h2>
 
 <table class>
 <tr><th class="th">Code</th><td>{{ "U+{:04X}".format(data.id) }}</td></tr>
 <tr><th class="th">Name</th><td>{{ data.name }}</td></tr>
+{% if data.char != None %}
 <tr><th class="th">Copy to Clipboard</th><td><div class="input-group"><input type="text" id="copy-code" value="{{ data.char }}"><span class="input-group-button"><button id="copy-btn" class="btn" data-clipboard-target="#copy-code">Copy!</button></span></div></td></tr>
+{% endif %}
 <tr><th class="th">Block</th><td><a href="{{ "/b/{:04X}".format(data.block.id) }}">{{ data.block.name }}</a></td></tr>
 {% if data.subblock != None %}
 <tr><th class="th">Sub-Block</th><td>{{ data.subblock.name }}</td></tr>
@@ -38,7 +41,10 @@
 {% for item in data.comments %}{{ item|safe }}<br />{% endfor %}
 </td></tr>
 {% endif %}
-<tr><th class="th">Character Info (external)</th><td><a href="http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}" target="_blank">http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}</a></td></tr>
+<tr>
+    <th class="th">Character Info (external)</th>
+    <td><a href="http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}" target="_blank">http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.id) }}</a></td>
+</tr>
 </table>
 
 {{ macros.title_icon("Case Variant", data.case) }}
