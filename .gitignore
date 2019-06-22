@@ -2,6 +2,7 @@ config.py
 config-local.py
 config-production.py
 .idea
+.mypy_cache
 .vscode
 __pycache__
 venv

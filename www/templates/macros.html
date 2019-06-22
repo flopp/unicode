@@ -1,6 +1,6 @@
 {% macro char_icon(item) -%}
-<a class="button button-outline btn-char" href="/c/{{ "{:04X}".format(item.id) }}" title="{{ "U+{:04X}: {}".format(item.id, item.name) }}">
-    {{ item.char }}
+<a class="button button-outline btn-char" href="{{ item.url() }}" title="{{ "{}: {}".format(item.u_plus(), item.name()) }}">
+    {{ item.get_string() }}
 </a>
 {%- endmacro %}
 

@@ -1,38 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Block: {{ data.name }}{% endblock %}
-{% block canonical %}{{ "/b/{:04X}".format(data.id) }}{% endblock %}
+{% block title %}Block: {{ data.block.name() }}{% endblock %}
+{% block canonical %}{{ data.block.url() }}{% endblock %}
 
 {% block navigation %}
 <section class="container clearfix">
 {% if data.prev != None %}
-<a class="button button-clear float-left" href="{{ "/b/{:04X}".format(data.prev.id) }}" rel="prev">◁ {{ "{:04X}: {}".format(data.prev.id, data.prev.name) }}</a>
+<a class="button button-clear float-left" href="{{ data.prev.url() }}" rel="prev">◁ {{ "{}: {}".format(data.prev.u_plus(), data.prev.name()) }}</a>
 {% endif %}
 {% if data.next != None %}
-<a class="button button-clear float-right" href="{{ "/b/{:04X}".format(data.next.id) }}" rel="next">{{ "{:04X}: {}".format(data.next.id, data.next.name) }} ▷</a>
+<a class="button button-clear float-right" href="{{ data.next.url() }}" rel="next">{{ "{}: {}".format(data.next.u_plus(), data.next.name()) }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}
 
 {% block content %}
 <section class="container">
-<h2 class="title">Block: {{ data.name }}</h2>
+<h2 class="title">Block: {{ data.block.name() }}</h2>
 
 <table>
     <tr>
         <th class="th">Range</th>
-        <td><a href="/c/{{ "{:04X}".format(data.range_from) }}">{{ "U+{:04X}".format(data.range_from) }}</a> - <a href="/c/{{ "{:04X}".format(data.range_to) }}">{{ "U+{:04X}".format(data.range_to) }}</a></td>
+        <td><a href="/c/{{ "{:04X}".format(data.block.from_codepoint()) }}">{{ "U+{:04X}".format(data.block.from_codepoint()) }}</a> - <a href="/c/{{ "{:04X}".format(data.block.to_codepoint()) }}">{{ "U+{:04X}".format(data.block.to_codepoint()) }}</a></td>
     </tr>
     <tr>
         <th class="th">Official Chart</th>
-        <td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.id) }}.pdf</a></td>
+        <td><a href="http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.block.block_id()) }}.pdf" target="_blank">http://www.unicode.org/charts/PDF/{{ "U{:04X}".format(data.block.block_id()) }}.pdf</a></td>
     </tr>
     {% if data.wikipedia %}
     <tr>
         <th class="th">Wikipedia</th>
         <td>
-            {% if data.wikipedia_summary|length > 0 %}{{ data.wikipedia_summary|safe }}<br />{% endif %}
-            <a href="{{ data.wikipedia }}" target="_blank">{{ data.wikipedia }}</a>
+            {% if data.block.wikipedia_summary|length > 0 %}{{ data.block.wikipedia_summary|safe }}<br />{% endif %}
+            <a href="{{ data.block.wikipedia }}" target="_blank">{{ data.block.wikipedia }}</a>
         </td>
     </tr>
     {% endif %}

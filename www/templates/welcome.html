@@ -23,14 +23,14 @@
         <div class="column">
             <ul>
             {% for item in data.blocks1 %}
-            <li><a href="{{ "/b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
+            <li><a href="{{ item.url() }}">{{ item.name() }}</a></li>
             {% endfor %}
             </ul>
         </div>
         <div class="column">
             <ul>
             {% for item in data.blocks2 %}
-            <li><a href="{{ "/b/{:04X}".format(item.id) }}">{{ item.name }}</a></li>
+            <li><a href="{{ item.url() }}">{{ item.name() }}</a></li>
             {% endfor %}
             </ul>
         </div>
