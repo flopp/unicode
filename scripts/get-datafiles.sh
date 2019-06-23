@@ -13,7 +13,7 @@ WIKIPEDIA_TARGET="$TARGET_DIR/wikipedia.html"
 EMOJIONE_TARGET="$TARGET_DIR/emojione.css"
 HANGUL_TARGET="$TARGET_DIR/hangul.txt"
 
-UNICODE="11.0.0"
+UNICODE="12.0.0"
 NAMESLIST_URL="ftp://www.unicode.org/Public/${UNICODE}/ucd/NamesList.txt"
 BLOCKS_URL="ftp://www.unicode.org/Public/${UNICODE}/ucd/Blocks.txt"
 CONFUSABLES_URL="ftp://ftp.unicode.org/Public/security/${UNICODE}/confusables.txt"

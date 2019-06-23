@@ -6,10 +6,10 @@
 {% block navigation %}
 <section class="container clearfix">
 {% if data.prev != None %}
-<a class="button button-clear float-left" href="{{ data.prev.url() }}" rel="prev">◁ {{ "{}: {}".format(data.prev.u_plus(), data.prev.name()) }}</a>
+<a class="button button-clear float-left" href="{{ data.prev.url() }}" rel="prev">◁ {{ data.prev.name() }}</a>
 {% endif %}
 {% if data.next != None %}
-<a class="button button-clear float-right" href="{{ data.next.url() }}" rel="next">{{ "{}: {}".format(data.next.u_plus(), data.next.name()) }} ▷</a>
+<a class="button button-clear float-right" href="{{ data.next.url() }}" rel="next">{{ data.next.name() }} ▷</a>
 {% endif %}
 </section>
 {% endblock %}
