@@ -14,7 +14,7 @@ if [ ! -d "$TARGET_DIR" ] ; then
     
     for VE_BIN in /usr/bin/virtualenv ~/bin/virtualenv ; do
         if [ -e $VE_BIN ] ; then
-            $VE_BIN -p python3 "$TARGET_DIR"
+            $VE_BIN -p python3.7 "$TARGET_DIR"
             break
         fi
     done
