@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ "{}: {}".format(data.codepoint.u_plus(), data.codepoint.name()) }}{% endblock %}
+{% block title %}{{ data.codepoint.title() }}{% endblock %}
 {% block canonical %}{{ data.codepoint.url() }}{% endblock %}
 
 {% block navigation %}
@@ -51,10 +51,6 @@
 {% for item in data.codepoint.comments %}{{ item|safe }}<br />{% endfor %}
 </td></tr>
 {% endif %}
-<tr>
-    <th class="th">Character Info (external)</th>
-    <td><a href="http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.codepoint.codepoint_id()) }}" target="_blank">http://unicode.org/cldr/utility/character.jsp?a={{ "{:04X}".format(data.codepoint.codepoint_id()) }}</a></td>
-</tr>
 </table>
 
 

@@ -1,4 +1,7 @@
+appdirs
 flask
 flipflop
 Flask-Caching
+requests
+requests-ftp
 wikipedia

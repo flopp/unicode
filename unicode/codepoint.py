@@ -1,11 +1,17 @@
-from typing import List, Optional
+import re
+import typing
 
 
 def code_link(code: str) -> str:
-    return '<a href="/c/{code}">U+{code}</a>'.format(code=code.upper())
+    code_upper = code.upper()
+    return f'<a href="/c/{code_upper}">U+{code_upper}</a>'
 
-def hex2id(hex_string: str) -> int:
+
+def hex2id(hex_string: str) -> typing.Optional[int]:
+    if not re.match(r"^[0-9A-Fa-f]{1,6}$", hex_string):
+        return None
     return int(hex_string, 16)
+
 
 class CodepointInfo:
     def __init__(self, codepoint: int, name: str):
@@ -16,12 +22,12 @@ class CodepointInfo:
         return self.codepoint
 
     def url(self) -> str:
-        return "/c/{:04X}".format(self.codepoint_id())
+        return f"/c/{self.codepoint_id():04X}"
 
     def u_plus(self) -> str:
-        return "U+{:04X}".format(self.codepoint_id())
+        return f"U+{self.codepoint_id():04X}"
 
-    def get_string(self) -> Optional[str]:
+    def get_string(self) -> typing.Optional[str]:
         try:
             string = chr(self.codepoint)
         except ValueError:
@@ -36,23 +42,26 @@ class CodepointInfo:
     def name(self) -> str:
         return self._name
 
-    def set_name(self, name: str):
+    def set_name(self, name: str) -> None:
         self._name = name
+
+    def title(self) -> str:
+        return f"U+{self.codepoint_id():04X}: {self._name}"
 
 
 class Codepoint:
     def __init__(self, codepoint: int, name: str, block_id: int = None):
         self.info = CodepointInfo(codepoint, name)
-        self.block: Optional[int] = block_id
-        self.subblock: Optional[int] = None
-        self.case: Optional[int] = None
-        self.alternate: List[str] = []
-        self.comments: List[str] = []
-        self.related: List[int] = []
-        self.confusables: List[int] = []
-        self.combinables: List[List[int]] = []
-        self.prev: Optional[int] = None
-        self.next: Optional[int] = None
+        self.block: typing.Optional[int] = block_id
+        self.subblock: typing.Optional[int] = None
+        self.case: typing.Optional[int] = None
+        self.alternate: typing.List[str] = []
+        self.comments: typing.List[str] = []
+        self.related: typing.List[int] = []
+        self.confusables: typing.List[int] = []
+        self.combinables: typing.List[typing.List[int]] = []
+        self.prev: typing.Optional[int] = None
+        self.next: typing.Optional[int] = None
 
     def codepoint_id(self) -> int:
         return self.info.codepoint_id()
@@ -63,11 +72,14 @@ class Codepoint:
     def u_plus(self) -> str:
         return self.info.u_plus()
 
-    def get_string(self) -> Optional[str]:
+    def get_string(self) -> typing.Optional[str]:
         return self.info.get_string()
 
     def name(self) -> str:
         return self.info.name()
 
-    def set_name(self, name: str):
+    def set_name(self, name: str) -> None:
         self.info.set_name(name)
+
+    def title(self) -> str:
+        return self.info.title()

@@ -1,0 +1,2 @@
+{% for item in blocks %}{{ config.BASE_URL }}{{ item.url() }}
+{% endfor %}

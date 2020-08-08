@@ -1,30 +1,48 @@
-.PHONY: setup test flake8 spell pylint check-format deploy
-
+.PHONY: setup
 setup:
-	python3 -m venv venv
-	venv/bin/pip install --upgrade pip
-	venv/bin/pip install -r requirements.txt
-	venv/bin/pip install -r requirements-dev.txt
+	python3 -m venv .env
+	.env/bin/pip install --upgrade pip
+	.env/bin/pip install -r requirements.txt
 
-test: flake8 spell pylint 
+.PHONY: setup-dev
+setup-dev: setup
+	.env/bin/pip install -r requirements-dev.txt
 
-flake8:
-	@venv/bin/flake8 www
+.PHONY: install
+install: setup
+	.env/bin/pip install .
 
-pylint:
-	@venv/bin/pylint www/*.py
 
-check-format:
-	@venv/bin/black --check www/*.py
+.PHONY: lint
+lint: mypy
+	.env/bin/pylint \
+	    unicode
+	.env/bin/black \
+	    --line-length 120 \
+	    --check \
+	    --diff \
+	    unicode
 
+.PHONY: mypy
 mypy:
-	@venv/bin/mypy --ignore-missing-imports -m www
+	.env/bin/mypy \
+	    unicode
 
-spell:
-	@venv/bin/codespell README.md www/*.py www/templates/*.html
-
+.PHONY: format
 format:
-	@venv/bin/black www/*.py
+	.env/bin/black \
+	    --line-length 120 \
+	    unicode
 
-deploy:
-	ansible-playbook deploy.yml
+.PHONY: run
+run: setup
+	PYTHONPATH=. .env/bin/python unicode/cli.py \
+		--config config-example.py \
+		--verbose
+
+.PHONY: run-reset
+run-reset: setup
+	PYTHONPATH=. .env/bin/python unicode/cli.py \
+		--config config-example.py \
+		--reset \
+		--verbose

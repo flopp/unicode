@@ -1,2 +1,0 @@
-{% for item in blocks %}{{ config.BASE_URL }}{{ "/b/{:04X}".format(item.id) }}
-{% endfor %}

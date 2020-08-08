@@ -1,10 +1,4 @@
-config.py
-config-local.py
-config-production.py
-.idea
+.env
 .mypy_cache
 .vscode
 __pycache__
-venv
-www/__pycache__
-www/data
