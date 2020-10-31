@@ -15,6 +15,18 @@
 </head>
 {% import 'macros.html' as macros %}
 <body>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "url": "{{ config.BASE_URL }}",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ config.BASE_URL }}/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+    </script>
     <main class="wrapper">
         <nav class="navigation">
             <section class="container">
@@ -22,9 +34,8 @@
                     <img class="img" src="{{ url_for('.static', filename='img/logo.svg') }}" alt="Unicode Explorer" title="Unicode Explorer"/>
                     <h1 class="title">Unicode Explorer</h1>
                 </a>
-                <form action="/search" method="POST" class="search-form float-right" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction" onsubmit="ga('send', 'event', 'search', document.getElementsByClassName('search-input')[0].value);">
-                    <meta itemprop="target" content="{{ config.BASE_URL }}/search?q={search_term_string}"/>
-                    <input type="text" placeholder="🔍 Search for Unicode Characters by Name, Keyword, Codepoint, ..." name="q" class="search-input" style="background: white;" itemprop="query-input" name="search_term_string" required>
+                <form action="/search" method="POST" class="search-form float-right" onsubmit="ga('send', 'event', 'search', document.getElementsByClassName('search-input')[0].value);">
+                    <input type="text" placeholder="🔍 Search for Unicode Characters by Name, Keyword, Codepoint, ..." name="q" class="search-input" style="background: white;" name="search_term_string" required>
                     <input type="submit" name="search-form" style="display: none;" value="Search">
                 </form>
             </section>
