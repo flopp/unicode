@@ -1,7 +1,7 @@
 # unicode-explorer
 A Flask-Based Web-App for Exploring Unicode
 
-Demo: https://unicode.flopp.net/
+Demo: https://unicode-explorer.com/
 
 ### Used Technologies
 - [Flask](http://flask.pocoo.org/): a microframework for Python
